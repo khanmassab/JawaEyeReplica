@@ -23,4 +23,9 @@ class Movie extends Model
         'catalogue',
     ];
 
+    public function getActorImageAttribute($value)
+    {
+        return json_decode($value);
+    }
+
 }

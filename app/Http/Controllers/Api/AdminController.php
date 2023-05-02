@@ -4,6 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\News;
 use App\Models\Movie;
+use App\Models\Service;
+use App\Models\Advertisement;
+use App\Models\Notification;
+use App\Models\Recharge;
+use App\Models\Withdrawal;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -106,7 +112,106 @@ class AdminController extends Controller
         return response()->json(['message' => 'News deleted successfully'], 204);
     }
 
+    public function postAdvertisement(Request $request)
+    {
+        $validatedData = $request->validate([
+            'ad_pic' => 'required',
+            'ad_link' => 'required'
+        ]);
 
+        $adPic = $request->file('ad_pic')->store('public');
 
+        $advertisement = new Advertisement();
+        $advertisement->ad_pic = $adPic;
+        $advertisement->ad_link = $validatedData['ad_link'];
+        $advertisement->save();
+        
+        return response()->json(['code' => 200, 'message' => 'Advertisement created successfully', 'ad' => $advertisement ]);
+    }
 
+    public function deleteAd($id)
+    {
+        $advertisement = Advertisement::find($id);
+        
+        if (!$advertisement) {
+            return response()->json(['code' => 404, 'message' => 'Advertisement not found']);
+        }
+        
+        $advertisement->delete();
+        
+        return response()->json(['code' => 200, 'message' => 'Advertisement deleted successfully']);
+    }
+
+    public function postService(Request $request)
+    {
+        $validatedData = $request->validate([
+            'title' => 'required',
+            'contact' => 'required'
+        ]);
+
+        $service = new Service();
+        $service->title = $validatedData['title'];
+        $service->contact = $validatedData['contact'];
+        $service->save();
+        
+        return response()->json(['code' => 200, 'message' => 'Service created successfully', 'service' => $service ]);
+    }
+
+    public function deleteService($id)
+    {
+        $service = Service::find($id);
+        
+        if (!$service) {
+            return response()->json(['code' => 404, 'message' => 'service not found']);
+        }
+        
+        $service->delete();
+        
+        return response()->json(['code' => 200, 'message' => 'service deleted successfully']);
+    }
+
+    public function postNotification(Request $request)
+    {
+        $validatedData = $request->validate([
+            'notification_text' => 'required',
+        ]);
+
+        $notification = new Notification();
+        $notification->notification_text = $validatedData['notification_text'];
+        $notification->save();
+        
+        return response()->json(['code' => 200, 'message' => 'Notification created successfully', 'notification' => $notification ]);
+    }
+
+    public function approveRecharge($id)
+    {
+        $recharge = Recharge::findOrFail($id);
+        $recharge->approve();
+
+        return response()->json(['code' => 200, 'message' => 'Recharge request approved. Balance updated.']);
+    }
+
+    public function declineRecharge($id)
+    {
+        $recharge = Recharge::findOrFail($id);
+        $recharge->decline();
+
+        return response()->json(['code' => 200, 'message' => 'Recharge request declined.']);
+    }
+    
+    public function approveWithdrawal($id)
+    {
+        $withdrawal = Withdrawal::findOrFail($id);
+        $withdrawal->approve();
+
+        return response()->json(['code' => 200, 'message' => 'Withdrawal request approved. Balance updated.']);
+    }
+
+    public function declineWithdrawal($id)
+    {
+        $withdrawal = Withdrawal::findOrFail($id);
+        $withdrawal->decline();
+
+        return response()->json(['code' => 200, 'message' => 'Withdrawal request declined.']);
+    }
 }

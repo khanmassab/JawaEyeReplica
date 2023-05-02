@@ -12,6 +12,17 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    public function balance()
+    {
+        return $this->hasOne(Balance::class);
+    }
+
+    public function gain()
+    {
+        return $this->hasOne(Gain::class);
+    }
+
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,7 +32,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'otp'
+        'otp',
+        'profile_picture'
     ];
 
     /**
@@ -42,5 +54,6 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'otp' => 'integer',
+        'profile_picture' => 'string'
     ];
 }
