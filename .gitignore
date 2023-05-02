@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /.phpunit.cache
 /node_modules
 /public/build
@@ -19,6 +20,8 @@ yarn-error.log
 /.idea
 /.vscode
 =======
+=======
+>>>>>>> 1624a19f79b96fcd3fbe8fb43773bac0b2bf9e99
 /vendor/
 node_modules/
 npm-debug.log
@@ -42,4 +45,7 @@ Homestead.yaml
 Homestead.json
 /.vagrant
 .phpunit.result.cache
+<<<<<<< HEAD
 >>>>>>> 1624a19 (Initial commit)
+=======
+>>>>>>> 1624a19f79b96fcd3fbe8fb43773bac0b2bf9e99
