@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Twilio\Rest\Client;
+
 
 class AuthController extends Controller
 {
@@ -134,16 +136,33 @@ class AuthController extends Controller
             ]);
         }
 
-        $user = User::where('email', $request->input('email'))->where('phone', $request->input('phone'))->first();
-
-        // if($user->password){
-        //     return response()->json(['code' => 200, 'success' => false, 'message' => 'The user is already registered']);
-        // }
+        $client = new Client(
+    env('TWILIO_ACCOUNT_SID'),
+    env('TWILIO_AUTH_TOKEN')
+);
 
         $otp = rand(1000, 9999);
+
+        if($request->input('email')){
+            $user = User::where('email', $request->input('email'))->first();
+            
+        }
+
+        else{
+            $user = User::where('phone', $request->input('phone'))->first();
+            $toNumber = $request->input('phone');
+            $message = 'Your verification code is: 1234';
+
+            $client->messages->create($toNumber, [
+                'from' => env('TWILIO_NUMBER'),
+                'body' => $message
+            ]);
+        }
+
         if(!$user){
             $user = new User;
         }
+
         if($request->email){
             $user->email = $request->email;
         }
@@ -263,7 +282,8 @@ class AuthController extends Controller
                         'success' => true,
                         'message' => 'User logged in',
                         'token' => $user['token'],
-                        'invitation_code' => $user['invitation_code']
+                        'invitation_code' => $user['invitation_code'],
+                        'profile_picture' => $user['profile_picture'],
                     ]);
                 }
             } else {
@@ -273,5 +293,103 @@ class AuthController extends Controller
             return response()->json(['code' => 404, 'success' => false, 'message' => 'User does not exist']);
         }
     }
+
+    public function generateOtp(Request $request)
+    {
+        // Validate the request data
+        $validator = Validator::make($request->all(), [
+            'email' => 'required_without:phone',
+            'phone' => 'required_without:email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'code' => 422,
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ]);
+        }
+
+        $otp = rand(1000, 9999);
+
+        if($request->input('email')){
+            $user = User::where('email', $request->input('email'))->first();
+            
+        }
+
+        else{
+            $user = User::where('phone', $request->input('phone'))->first();
+        }
+
+
+        // dd($user);
+        if(!$user){
+            return response()->json(['code' => 404, 'success' => false, 'message' => 'User not found']);
+        }
+
+        $to = $user->email ?? $user->phone;
+        
+        
+        $mail = Mail::to($to)->send(new OtpMail($otp));
+
+        $user->otp = $otp;
+        $user->save();
+        return response()->json(['code' => 200, 'otp' => $otp]);
+        // if($mail){
+        // }
+
+
+    }
+
+
+    public function verifyOtpAndChangePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required_without:phone',
+            'phone' => 'required_without:email',
+            'otp' => 'required|integer',
+            'password' => 'required|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first(),
+            ]);
+        }
+
+        if($request->input('email')){
+            $user = User::where('email', $request->input('email'))->first();
+        }
+
+        else{
+            $user = User::where('phone', $request->input('phone'))->first();
+        }
+
+        // dd($user);
+
+        if(!$user){
+            return response()->json(['code' => 404, 'success' => false, 'message' => 'User not found']);
+        }
+
+        if ($user->otp != (int)$request->otp) {
+            return response()->json([
+                'code' => 404,
+                'success' => false,
+                'message' => 'Incorrect OTP',
+            ]);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->otp = null;
+        $user->save();
+
+        return response()->json([
+            'code' => 200,
+            'success' => true,
+            'message' => 'Password changed successfully'
+        ]);
+    }
+
 
 }
