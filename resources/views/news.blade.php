@@ -93,11 +93,6 @@ checkbox.click(function(){
 			</a>
 			<div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
 				<div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Login Screens:</h6>
-					<a class="collapse-item" href="login.html">Login</a>
-					<a class="collapse-item" href="register.html">Register</a>
-					<a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-					<div class="collapse-divider"></div>
 					<h6 class="collapse-header">Other Pages:</h6>
 					<a class="collapse-item" href="{{ url('movies') }}">Movies</a>
 					<a class="collapse-item" href="{{ url('news') }}">News</a>
@@ -273,10 +268,10 @@ checkbox.click(function(){
 					<th>News URL</th>
 					<th>Release Time</th>
 					<th>News Details</th>
-					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
+			@foreach ($news as $news)
 				<tr>
 					<td>
 						<span class="custom-checkbox">
@@ -284,45 +279,11 @@ checkbox.click(function(){
 							<label for="checkbox1"></label>
 						</span>
 					</td>
-					<td>ecomspro/yutrekjhg877</td>
-					<td>19/04/2023</td>
-					<td> Lorem ipsum dolar smit Lorem ipsum dolar smit Lorem ipsum dolar smit.</td>
-					<td>
-						<a href="#editNewsModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-						<a href="#deleteNewsModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-					</td>
+					<td>{{ $news->poster }}</td>
+                        <td>{{ $news->release_time }}</td>
+                        <td>{{ $news->detail }}</td>
 				</tr>
-				<tr>
-					<td>
-						<span class="custom-checkbox">
-							<input type="checkbox" id="checkbox2" name="options[]" value="1">
-							<label for="checkbox2"></label>
-						</span>
-					</td>
-				    <td>ecomspro/yutrekjhg87</td>
-					<td>19/04/2023</td>
-					<td> junaid here</td>
-					<td>
-						<a href="#editNewsModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-						<a href="#deleteNewsModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<span class="custom-checkbox">
-							<input type="checkbox" id="checkbox3" name="options[]" value="1">
-							<label for="checkbox3"></label>
-						</span>
-					</td>
-					<td>juanid</td>
-					<td>19/04/2023</td>
-					<td> Lorem ipsum dolar smit Lorem ipsum dolar smit.</td>
-					<td>
-						<a href="editNewsModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-						<a href="#deleteNewsModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-					</td>
-				</tr>
-
+				@endforeach
 			</tbody>
                                 </table>
                             </div>
@@ -336,7 +297,8 @@ checkbox.click(function(){
 <div id="addNewsModal" class="modal fade">
 <div class="modal-dialog">
 	<div class="modal-content">
-		<form>
+		<form method="POST" action="{{ url('create_news_record') }}"  id="news-form">
+		@csrf
 			<div class="modal-header">
 				<h4 class="modal-title">Add News</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -346,15 +308,15 @@ checkbox.click(function(){
                 <div class="col-12">
 				<div class="form-group">
 					<label>News URL</label> </br>
-					<input type="text" id="newsurl" name="urlnews" required>
+					<input type="text" id="newsurl" name="poster" required>
 				</div>
 				<div class="form-group">
 					<label>Release Time</label> </br>
-					<input type="date" id="newsreleasedate" name="newsdate" required>
+					<input type="datetime-local" id="birthday" name="release_time" required>
 				</div>
                 <div class="form-group">
 					<label>News Details</label>
-					<textarea name="news-details" class="form-control" required></textarea>
+					<textarea name="detail" class="form-control" required></textarea>
 				</div>
                </div>
 			</div>
@@ -438,25 +400,18 @@ checkbox.click(function(){
 
  <!-- Axios Call Function-->
 	<script>
-  function addNews() {
-  const newsUrl = document.querySelector("#newsurl").value;
-  const releaseDate = document.querySelector("#newsreleasedate").value;
-  const newsDetails = document.querySelector("#newsdetails").value;
-  const data = {
-    news_url: newsUrl,
-    release_date: releaseDate,
-    news_details: newsDetails
-  };
-  axios.post('/api/news', data)
-    .then((response) => {
-      console.log(response);
-      alert('News added successfully');
-    })
-    .catch((error) => {
-      console.log(error);
-      alert('Error adding news');
-    });
-}
+const form = document.getElementById('news-form');
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const releaseTimeInput = document.getElementById('birthday');
+    const releaseTimeValue = releaseTimeInput.value;
+    const releaseTime = new Date(releaseTimeValue).toISOString().replace('T', ' ').replace(/\.\d{3}Z$/, '');
+
+    releaseTimeInput.value = releaseTime;
+
+    form.submit();
+});
 
 </script>
 

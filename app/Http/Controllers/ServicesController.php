@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Movie;
+use App\Models\Services;
 use Illuminate\Http\Request;
 
-class HomeController extends Controller
+class ServicesController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -24,7 +24,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $movies = Movie::all();
-        return view('home', compact('movies'));
+        $services = Services::all();
+        return view('services', compact('services'));
     }
 }

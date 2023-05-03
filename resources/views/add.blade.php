@@ -102,11 +102,6 @@ checkbox.click(function(){
 			</a>
 			<div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
 				<div class="bg-white py-2 collapse-inner rounded">
-					<h6 class="collapse-header">Login Screens:</h6>
-					<a class="collapse-item" href="login.html">Login</a>
-					<a class="collapse-item" href="register.html">Register</a>
-					<a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-					<div class="collapse-divider"></div>
 					<h6 class="collapse-header">Other Pages:</h6>
 					<a class="collapse-item" href="{{ url('movies') }}">Movies</a>
 					<a class="collapse-item" href="{{ url('news') }}">News</a>
@@ -283,10 +278,10 @@ checkbox.click(function(){
 					</th>
 					<th>Ad Image</th>
 					<th>Ad Link</th>
-					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
+			@foreach ($add as $add)
 				<tr>
 					<td>
 						<span class="custom-checkbox">
@@ -294,41 +289,10 @@ checkbox.click(function(){
 							<label for="checkbox1"></label>
 						</span>
 					</td>
-					<td>ecomspro/yutrekjhg877</td>
-					<td>https:76ghklmnbfrr/ui9876</td>
-					<td>
-						<a href="#editNewsModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-						<a href="#deleteNewsModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-					</td>
+                        <td>{{ $add->ad_pic }}</td>
+                        <td>{{ $add->ad_link }}</td>
 				</tr>
-				<tr>
-					<td>
-						<span class="custom-checkbox">
-							<input type="checkbox" id="checkbox1" name="options[]" value="1">
-							<label for="checkbox1"></label>
-						</span>
-					</td>
-					<td>ecomspro/yutrekjhg877</td>
-					<td>https:76ghklmnbfrr/ui9876</td>
-					<td>
-						<a href="#editNewsModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-						<a href="#deleteNewsModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<span class="custom-checkbox">
-							<input type="checkbox" id="checkbox1" name="options[]" value="1">
-							<label for="checkbox1"></label>
-						</span>
-					</td>
-					<td>ecomspro/yutrekjhg877</td>
-					<td>https:76ghklmnbfrr/ui9876</td>
-					<td>
-						<a href="#editNewsModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-						<a href="#deleteNewsModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-					</td>
-				</tr>
+				@endforeach
 
 			</tbody>
                                 </table>
@@ -345,7 +309,8 @@ checkbox.click(function(){
 <div id="addNewsModal" class="modal fade">
 <div class="modal-dialog">
 	<div class="modal-content">
-		<form>
+		<form method="POST" action="{{ url('create_add_record') }}"  id="add-form">
+		@csrf
 			<div class="modal-header">
 				<h4 class="modal-title">Add Ad</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -355,11 +320,11 @@ checkbox.click(function(){
                 <div class="col-12">
 				<div class="form-group">
 					<label>Ad Image</label>
-					<input type="file" id="ad-image-name="adimage" required>
+					<input type="file" id="ad-image" name="ad_pic" required>
 				</div>
                 <div class="form-group mt-4">
 					<label>Ad link</label> </br>
-					<input type="text" id="linkad" name="adlink" required>
+					<input type="text" id="linkad" name="ad_link" required>
 				</div>
                </div>
 			</div>

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Movie;
+use App\Models\Add;
 use Illuminate\Http\Request;
 
-class HomeController extends Controller
+class AddController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -24,7 +24,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $movies = Movie::all();
-        return view('home', compact('movies'));
+        $add = Add::all();
+        return view('add', compact('add'));
     }
 }

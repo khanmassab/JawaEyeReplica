@@ -6,7 +6,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>SNBRZ - Recharge/Withdawal</title>
+<title>SNBRZ - Recharge</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -93,17 +93,17 @@ checkbox.click(function(){
 			</a>
 			<div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
 				<div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Login Screens:</h6>
+					<h6 class="collapse-header">Login Screens:</h6>
 					<a class="collapse-item" href="login.html">Login</a>
 					<a class="collapse-item" href="register.html">Register</a>
 					<a class="collapse-item" href="forgot-password.html">Forgot Password</a>
 					<div class="collapse-divider"></div>
 					<h6 class="collapse-header">Other Pages:</h6>
-					<a class="collapse-item" href="{{ url('movies') }}">Movies</a>
-					<a class="collapse-item" href="{{ url('news') }}">News</a>
-					<a class="collapse-item" href="{{ url('recharge-withdrawal') }}">Recharge/Withdawal</a>
-					<a class="collapse-item" href="{{ url('services') }}">Services Number</a>
-					<a class="collapse-item" href="{{ url('add') }}">Add</a>
+					<a class="collapse-item" href="movies.html">Movies</a>
+					<a class="collapse-item" href="news.html">News</a>
+					<a class="collapse-item" href="recharge.html">Recharge/Withdawal</a>
+					<a class="collapse-item" href="services.html">Services Number</a>
+					<a class="collapse-item" href="ad.html">Add</a>
 				</div>
 			</div>
 		</li>
@@ -253,7 +253,7 @@ checkbox.click(function(){
               <div class="table-title">
 			<div class="row">
 				<div class="col-sm-6">
-					<h2>Manage <b>Recharge/Withdawal</b></h2>
+					<h2>Manage <b>Recharge</b></h2>
 				</div>
 				<div class="col-sm-6">
 					<a href="#addNewsModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Recharge/Withdawal</span></a>
@@ -273,13 +273,13 @@ checkbox.click(function(){
 						</span>
 					</th>
 					<th>ID</th>
-					<th>Type</th>
 					<th>Amount</th>
 					<th>Status</th>
 					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
+			@foreach ($recharge as $recharge)
 				<tr>
 					<td>
 						<span class="custom-checkbox">
@@ -288,46 +288,18 @@ checkbox.click(function(){
 						</span>
 					</td>
 				    <td>ecomspro/yutrekjhg87</td>
-					<td>19/04/2023</td>
-					<td>junaid here</td>
-					<td> Lorem ipsum dolar smit Lorem ipsum dolar smit.</td>
+					<td>500</td>
 					<td>
-						<a href="#editNewsModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-						<a href="#deleteNewsModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+					   <select class="form-control form-label-dropdown" id="recharge/withdrawal-status-field" v-model="recharge/withdrawal-status-type">
+                           <option value="">Accepted</option>
+                           <option value="legal">Rejected</option>
+                        </select>
+				     </td>
+					<td>
+						<button type="submit" class="btn btn-danger">Update Status</button>
 					</td>
 				</tr>
-				<tr>
-					<td>
-						<span class="custom-checkbox">
-							<input type="checkbox" id="checkbox2" name="options[]" value="1">
-							<label for="checkbox2"></label>
-						</span>
-					</td>
-				    <td>ecomspro/yutrekjhg87</td>
-					<td>19/04/2023</td>
-					<td>1800</td>
-					<td> Lorem ipsum dolar smit Lorem ipsum dolar smit.</td>
-					<td>
-						<a href="#editNewsModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-						<a href="#deleteNewsModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-					</td>
-				</tr><tr>
-					<td>
-						<span class="custom-checkbox">
-							<input type="checkbox" id="checkbox2" name="options[]" value="1">
-							<label for="checkbox2"></label>
-						</span>
-					</td>
-				    <td>ecomspro/yutrekjhg87</td>
-					<td>19/04/2023</td>
-					<td>junaid here</td>
-					<td> Lorem ipsum dolar smit Lorem ipsum dolar smit.</td>
-					<td>
-						<a href="#editNewsModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-						<a href="#deleteNewsModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-					</td>
-				</tr>
-
+				@endforeach
 			</tbody>
                                 </table>
                             </div>
@@ -340,7 +312,8 @@ checkbox.click(function(){
 <div id="addNewsModal" class="modal fade">
 <div class="modal-dialog">
 	<div class="modal-content">
-		<form>
+		<form method="POST" action="{{ url('create_add_record') }}"  id="recharge-form">
+		@csrf
 			<div class="modal-header">
 				<h4 class="modal-title">Add Recharge</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -352,25 +325,15 @@ checkbox.click(function(){
 					<label>ID </label> </br>
 					<input type="text" id="user-id" name="userid" required>
 				</div>
-				<div class="dropdown">
-
-					<select class="form-control form-label-dropdown" id="recharge/withdrawal-field" v-model="recharge/withdrawal-type">
-                                <option value="">Recharge</option>
-                                <option value="legal">Withdrawal</option>
-
-                            </select>
-				</div>
                 <div class="form-group mt-4">
 					<label>Total Amount</label>
 					<input type="number" id="recharge/withdrawal-amount" name="recharge/withdrawalamount" required>
 				</div>
                 <div class="dropdown">
-
 					<select class="form-control form-label-dropdown" id="recharge/withdrawal-status-field" v-model="recharge/withdrawal-status-type">
-                                <option value="">Pending</option>
-                                <option value="legal">In Process</option>
-                                <option value="illegal">Done</option>
-                            </select>
+                           <option value="">Accepted</option>
+                           <option value="legal">Rejected</option>
+                        </select>
 				</div>
                </div>
 			</div>
@@ -389,7 +352,7 @@ checkbox.click(function(){
 	<div class="modal-content">
 		<form>
 			<div class="modal-header">
-				<h4 class="modal-title">Edit News</h4>
+				<h4 class="modal-title">Add Recharge</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
@@ -399,30 +362,20 @@ checkbox.click(function(){
 					<label>ID </label> </br>
 					<input type="text" id="user-id" name="userid" required>
 				</div>
-				<div class="dropdown">
-
-					<select class="form-control form-label-dropdown" id="recharge/withdrawal-field" v-model="recharge/withdrawal-type">
-                                <option value="">Recharge</option>
-                                <option value="legal">Withdrawal</option>
-
-                            </select>
-				</div>
                 <div class="form-group mt-4">
 					<label>Total Amount</label>
 					<input type="number" id="recharge/withdrawal-amount" name="recharge/withdrawalamount" required>
 				</div>
                 <div class="dropdown">
-
 					<select class="form-control form-label-dropdown" id="recharge/withdrawal-status-field" v-model="recharge/withdrawal-status-type">
-                                <option value="">Pending</option>
-                                <option value="legal">In Process</option>
-                                <option value="illegal">Done</option>
-                            </select>
+                           <option value="">Accepted</option>
+                           <option value="legal">Rejected</option>
+                        </select>
 				</div>
                </div>
 			</div>
 
-			<div class="modal-footer">
+			<div class="modal-footer mt-4">
 				<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
 				<input type="submit" class="btn btn-success" value="Add">
 			</div>

@@ -101,11 +101,6 @@ checkbox.click(function(){
 			</a>
 			<div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
 				<div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Login Screens:</h6>
-					<a class="collapse-item" href="login.html">Login</a>
-					<a class="collapse-item" href="register.html">Register</a>
-					<a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-					<div class="collapse-divider"></div>
 					<h6 class="collapse-header">Other Pages:</h6>
 					<a class="collapse-item" href="{{ url('movies') }}">Movies</a>
 					<a class="collapse-item" href="{{ url('news') }}">News</a>
@@ -281,10 +276,10 @@ checkbox.click(function(){
 					</th>
 					<th>Title</th>
 					<th>Contact Number</th>
-					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
+              @foreach ($services as $services)
 				<tr>
 					<td>
 						<span class="custom-checkbox">
@@ -292,43 +287,10 @@ checkbox.click(function(){
 							<label for="checkbox1"></label>
 						</span>
 					</td>
-					<td>New Number</td>
-					<td>65347890</td>
-					<td>
-						<a href="#editNewsModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-						<a href="#deleteNewsModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-					</td>
+                        <td>{{ $services->title }}</td>
+                        <td>{{ $services->contact }}</td>
 				</tr>
-				<tr>
-					<td>
-						<span class="custom-checkbox">
-							<input type="checkbox" id="checkbox1" name="options[]" value="1">
-							<label for="checkbox1"></label>
-						</span>
-					</td>
-					<td>Old Number</td>
-					<td>65347890</td>
-					<td>
-						<a href="#editNewsModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-						<a href="#deleteNewsModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<span class="custom-checkbox">
-							<input type="checkbox" id="checkbox1" name="options[]" value="1">
-							<label for="checkbox1"></label>
-						</span>
-					</td>
-					<td>New Number</td>
-					<td>65347890</td>
-					<td>
-						<a href="#editNewsModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-						<a href="#deleteNewsModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-					</td>
-				</tr>
-
-
+				@endforeach
 			</tbody>
                                 </table>
                             </div>
@@ -341,7 +303,8 @@ checkbox.click(function(){
 <div id="addNewsModal" class="modal fade">
 <div class="modal-dialog">
 	<div class="modal-content">
-		<form>
+		<form method="POST" action="{{ url('create_services_record') }}"  id="services-form">
+		@csrf
 			<div class="modal-header">
 				<h4 class="modal-title">Add Service Number </h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -351,11 +314,11 @@ checkbox.click(function(){
                 <div class="col-12">
 				<div class="form-group">
 					<label>Service Number Title</label> </br>
-					<input type="text" id="service-title" name="servicetitle" required
+					<input type="text" id="service-title" name="title" required
 				</div>
                 <div class="form-group">
 					<label>Service Contact Number </label> </br>
-					<input type="text" id="service-contact-number" name="servicecontactnumber" required
+					<input type="number" id="service-contact-number" name="contact" required
 				</div>
 
                </div>
