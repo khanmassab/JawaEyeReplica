@@ -6,7 +6,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>SNBRZ - Service Contact</title>
+<title>SNBRZ - Withdrawal</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -14,15 +14,6 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-<style>
-body {
-color: #566787;
-background: #f5f5f5;
-font-family: 'Varela Round', sans-serif;
-font-size: 13px;
-}
-
-</style>
 <script>
 $(document).ready(function(){
 // Activate tooltip
@@ -56,6 +47,7 @@ checkbox.click(function(){
 <!-- Custom styles for this template-->
 <link href="sb-admin-2.min.css" rel="stylesheet">
 <link href="style_two.css" rel="stylesheet">
+</head>
 </head>
 <body id="page-top">
 
@@ -252,16 +244,14 @@ checkbox.click(function(){
 
 				<!-- Content Row -->
 
-			<div class="card-table shadow mb-4">
+
+						 <div class="card-table shadow mb-4">
               <div class="table-title">
 			<div class="row">
 				<div class="col-sm-6">
-					<h2>Manage <b>Services Number</b></h2>
+					<h2>Manage <b>Withdrawal</b></h2>
 				</div>
-				<div class="col-sm-6">
-					<a href="#addNewsModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Services Number</span></a>
-					{{-- <a href="#deleteNewsModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a> --}}
-				</div>
+
 			</div>
 		</div>
                         <div class="card-body">
@@ -275,21 +265,42 @@ checkbox.click(function(){
 							<label for="selectAll"></label>
 						</span>
 					</th>
-					<th>Title</th>
-					<th>Contact Number</th>
+					<th>User Email/ID</th>
+					<th>DataTime</th>
+					<th>Amount</th>
+					<th>Status</th>
+					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
-              @foreach ($services as $services)
+                {{-- {{ $recharges }} --}}
+			@foreach ($withdrawal as $withdrawal)
 				<tr>
 					<td>
 						<span class="custom-checkbox">
-							<input type="checkbox" id="checkbox1" name="options[]" value="1">
-							<label for="checkbox1"></label>
+							<input type="checkbox" id="checkbox2" name="options[]" value="1">
+							<label for="checkbox2"></label>
 						</span>
 					</td>
-                        <td>{{ $services->title }}</td>
-                        <td>{{ $services->contact }}</td>
+                    <td>{{ $withdrawal->user->email }}</td>
+				    <td>{{ $withdrawal->created_at }}</td>
+					<td>{{ $withdrawal->withdrawal_amout }}</td>
+				    <td>{{ $withdrawal->status }}</td>
+
+					<td>
+                        <form id="update-status-form" method="POST">
+                            @csrf
+                            <select id="status" class="form-control" name="status">
+                                <option value="">-- Select Status --</option>
+                                <option disabled value="" {{ $withdrawal->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="approved" {{ $withdrawal->status == 'approved' ? 'selected' : '' }}>Approved</option>
+                                <option value="declined" {{ $withdrawal->status == 'declined' ? 'selected' : '' }}>Declined</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary" onclick="updateStatus(event)">
+                                Update Status
+                            </button>
+                        </form>
+                    </td>
 				</tr>
 				@endforeach
 			</tbody>
@@ -304,24 +315,29 @@ checkbox.click(function(){
 <div id="addNewsModal" class="modal fade">
 <div class="modal-dialog">
 	<div class="modal-content">
-		<form method="POST" action="{{ url('/admin/service/create') }}"  id="services-form">
+		<form method="POST" action="{{ url('create_add_record') }}"  id="withdrawal-form">
 		@csrf
 			<div class="modal-header">
-				<h4 class="modal-title">Add Service Number </h4>
+				<h4 class="modal-title">Add withdrawal</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
                <div class="row">
                 <div class="col-12">
 				<div class="form-group">
-					<label>Service Number Title</label> </br>
-					<input type="text" id="service-title" name="title" required
+					<label>ID </label> </br>
+					<input type="text" id="user-id" name="userid" required>
 				</div>
-                <div class="form-group">
-					<label>Service Contact Number </label> </br>
-					<input type="number" id="service-contact-number" name="contact" required
+                <div class="form-group mt-4">
+					<label>Total Amount</label>
+					<input type="number" id="withdrawal/withdrawal-amount" name="withdrawal/withdrawalamount" required>
 				</div>
-
+                <div class="dropdown">
+					<select class="form-control form-label-dropdown" id="withdrawal/withdrawal-status-field" v-model="withdrawal/withdrawal-status-type">
+                           <option value="">Accepted</option>
+                           <option value="legal">Rejected</option>
+                        </select>
+				</div>
                </div>
 			</div>
 
@@ -339,25 +355,30 @@ checkbox.click(function(){
 	<div class="modal-content">
 		<form>
 			<div class="modal-header">
-				<h4 class="modal-title">Edit Service Number</h4>
+				<h4 class="modal-title">Add withdrawal</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
                <div class="row">
-                 <div class="col-12">
+                <div class="col-12">
 				<div class="form-group">
-					<label>Service Number Title</label> </br>
-					<input type="text" id="service-title" name="servicetitle" required
+					<label>ID </label> </br>
+					<input type="text" id="user-id" name="userid" required>
 				</div>
-                <div class="form-group">
-					<label>Service Contact Number </label> </br>
-					<input type="text" id="service-contact-number" name="servicecontactnumber" required
+                <div class="form-group mt-4">
+					<label>Total Amount</label>
+					<input type="number" id="withdrawal/withdrawal-amount" name="withdrawal/withdrawalamount" required>
 				</div>
-
+                <div class="dropdown">
+					<select class="form-control form-label-dropdown" id="withdrawal/withdrawal-status-field" v-model="withdrawal/withdrawal-status-type">
+                           <option value="">Accepted</option>
+                           <option value="legal">Rejected</option>
+                        </select>
+				</div>
                </div>
 			</div>
 
-			<div class="modal-footer">
+			<div class="modal-footer mt-4">
 				<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
 				<input type="submit" class="btn btn-success" value="Add">
 			</div>
@@ -371,7 +392,7 @@ checkbox.click(function(){
 	<div class="modal-content">
 		<form>
 			<div class="modal-header">
-				<h4 class="modal-title">Delete Service Number</h4>
+				<h4 class="modal-title">Delete News</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
@@ -400,27 +421,24 @@ checkbox.click(function(){
 </div>
 
 <!-- Axios Call Function-->
-	<script>
-  function addServiceNumber() {
-  const serviceTitle = document.getElementById('service-title').value;
-  const serviceContactNumber = document.getElementById('service-contact-number').value;
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
-  axios.post('/api/add-service', {
-    title: serviceTitle,
-    contactNumber: serviceContactNumber
-  })
-  .then(function (response) {
-    console.log(response);
-    // Handle success
-  })
-  .catch(function (error) {
-    console.log(error);
-    // Handle error
-  });
+<script>
+function updateStatus(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to update the status?')) {
+        var form = document.getElementById('update-status-form');
+        var status = document.getElementById('status').value;
+        if (status === 'approved') {
+            form.action = '{{ route('admin.withdrawal.approve', ['id' => $withdrawal->id]) }}';
+        } else if (status === 'declined') {
+            form.action = '{{ route('admin.withdrawal.decline', ['id' => $withdrawal->id]) }}';
+        }
+        form.submit();
+    }
 }
-
-
 </script>
+
 
  <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>

@@ -76,11 +76,13 @@ class AdminController extends Controller
             ]);
         }
 
-        dd($validatedData);
+        // dd($validatedData);
         $validatedData = $validator->validated();
 
         $news = News::create($validatedData);
-        return response()->json($news, 201);
+
+        return back();
+        // return response()->json($news, 201);
     }
 
     public function updateNews(Request $request, $id)
@@ -127,7 +129,10 @@ class AdminController extends Controller
         $advertisement->ad_link = $validatedData['ad_link'];
         $advertisement->save();
 
-        return response()->json(['code' => 200, 'message' => 'Advertisement created successfully', 'ad' => $advertisement ]);
+        return back();
+
+
+        // return response()->json(['code' => 200, 'message' => 'Advertisement created successfully', 'ad' => $advertisement ]);
     }
 
     public function deleteAd($id)
@@ -155,7 +160,10 @@ class AdminController extends Controller
         $service->contact = $validatedData['contact'];
         $service->save();
 
-        return response()->json(['code' => 200, 'message' => 'Service created successfully', 'service' => $service ]);
+        return back();
+
+
+        // return response()->json(['code' => 200, 'message' => 'Service created successfully', 'service' => $service ]);
     }
 
     public function deleteService($id)
@@ -168,7 +176,8 @@ class AdminController extends Controller
 
         $service->delete();
 
-        return response()->json(['code' => 200, 'message' => 'service deleted successfully']);
+        return back();
+        // return response()->json(['code' => 200, 'message' => 'service deleted successfully']);
     }
 
     public function postNotification(Request $request)
@@ -189,7 +198,8 @@ class AdminController extends Controller
         $recharge = Recharge::findOrFail($id);
         $recharge->approve();
 
-        return response()->json(['code' => 200, 'message' => 'Recharge request approved. Balance updated.']);
+        return back();
+        // return response()->json(['code' => 200, 'message' => 'Recharge request approved. Balance updated.']);
     }
 
     public function declineRecharge($id)
@@ -197,15 +207,20 @@ class AdminController extends Controller
         $recharge = Recharge::findOrFail($id);
         $recharge->decline();
 
-        return response()->json(['code' => 200, 'message' => 'Recharge request declined.']);
+        return back();
+        // return response()->json(['code' => 200, 'message' => 'Recharge request declined.']);
     }
 
     public function approveWithdrawal($id)
     {
+
         $withdrawal = Withdrawal::findOrFail($id);
         $withdrawal->approve();
 
-        return response()->json(['code' => 200, 'message' => 'Withdrawal request approved. Balance updated.']);
+        return back();
+
+
+        // return response()->json(['code' => 200, 'message' => 'Withdrawal request approved. Balance updated.']);
     }
 
     public function declineWithdrawal($id)
@@ -213,6 +228,9 @@ class AdminController extends Controller
         $withdrawal = Withdrawal::findOrFail($id);
         $withdrawal->decline();
 
-        return response()->json(['code' => 200, 'message' => 'Withdrawal request declined.']);
+        return back();
+
+
+        // return response()->json(['code' => 200, 'message' => 'Withdrawal request declined.']);
     }
 }

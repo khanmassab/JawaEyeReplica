@@ -24,7 +24,7 @@ class AddController extends Controller
      */
     public function index()
     {
-        $add = Add::all();
+        $add = Ad::all();
         return view('add', compact('add'));
     }
 }

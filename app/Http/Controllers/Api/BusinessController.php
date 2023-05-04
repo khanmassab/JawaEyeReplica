@@ -19,7 +19,7 @@ class BusinessController extends Controller
 
     public function addWallet(Request $request){
         $user = auth()->user();
- 
+
         if($user->walled_address){
             return response()->json(['code' => 403, 'message' => 'You are not allowed to change the walled address']);
         }
@@ -30,16 +30,16 @@ class BusinessController extends Controller
             $user->save();
 
             return response()->json(['code' => 200, 'message' => 'Walled added to your account', $user->wallet_address, $user->wallet_type]);
-        } 
+        }
     }
 
     public function recharge(Request $request)
     {
         try {
-            // $validator = Validator::make($request->all(), [
+        //     $validator = Validator::make($request->all(), [
         //     'amount' => 'required|numeric|min:0',
         // ]);
-    
+
         // if ($validator->fails()) {
         //     return response()->json(['error' => $validator->errors()], 422);
         // }
@@ -63,13 +63,13 @@ class BusinessController extends Controller
 
         $recharge = new Recharge();
         $recharge->user_id = $user->id;
-        $recharge->amount = $request->input('amount');  
+        $recharge->amount = $request->input('amount');
         $recharge->sender_binance = $request->input('sender_binance');
         $recharge->binance_link = $request->input('binance_link');
         $recharge->proof_screenshot = $screenshotPath;
         $recharge->save();
 
-        
+
         \Log::info($request);
         \Log::info($screenshotPath);
 
@@ -77,18 +77,18 @@ class BusinessController extends Controller
 
         // var_dump($recharge);
 
-        // if($recharge){
-        //     return response()->json(['code' => 200, 'message' => 'Recharge request submitted. Your recharge amount will be added to your balance in 24 hours.', $recharge]);
-        // }
+        if($recharge){
+            return response()->json(['code' => 200, 'message' => 'Recharge request submitted. Your recharge amount will be added to your balance in 24 hours.', 'data' => $recharge]);
+        }
 
         } catch (\Throwable $th) {
         \Log::info($th->getMessage());
 
-            //throw $th;
-            return response()->json(['code' => 500, 'message' => 'Something went wrong']);
+            throw $th;
+            // return response()->json(['code' => 500, 'message' => 'Something went wrong']);
         }
     }
-    
+
     public function withdrawal(Request $request)
     {
         $user = auth()->user();
@@ -104,15 +104,17 @@ class BusinessController extends Controller
             return response()->json(['code' => 401, 'message' => 'Invalid Password'], 401);
         }
 
+
+        // dd($user);
         $withdrawal = new Withdrawal();
         $withdrawal->user_id = $user->id;
-        $recharge->wallet_address = $user->wallet_address;
-        $withdrawal->wallet_type = $request->wallet_type;
-        $withdrawal->withdrawal_amount = $request->input('withdrawal_amount');
+        // $withdrawal->wallet_address = $user->wallet_address;
+        // $withdrawal->wallet_type = $request->wallet_type;
+        $withdrawal->withdrawal_amout = $request->input('withdrawal_amount');
         $withdrawal->save();
 
         if($withdrawal){
-            return response()->json(['code' => 200, 'message' => 'Withdrawal request submitted. Your amount will be transferred to your wallet in 24 hours.', $recharge]);
+            return response()->json(['code' => 200, 'message' => 'Withdrawal request submitted. Your amount will be transferred to your wallet in 24 hours.', $withdrawal]);
         }
 
         return response()->json(['code' => 500, 'message' => 'Something went wrong']);
@@ -124,7 +126,7 @@ class BusinessController extends Controller
         $movie = Movie::find($movieId);
         $price = $movie->price;
         $quantity = $request->input('quantity', 1); // Default to 1 if quantity is not provided
-        
+
         // Check if user has sufficient balance
         if ($user->balance->balance >= $price * $quantity) {
             // Deduct ticket price from user balance
@@ -140,7 +142,7 @@ class BusinessController extends Controller
             $user->save();
             $gains->save();
 
-            
+
 
             // Create new ticket records
             for ($i = 0; $i < $quantity; $i++) {
@@ -153,7 +155,7 @@ class BusinessController extends Controller
                 $ticket->booked_at = now();
                 $ticket->expiry_at = now()->addHours(24);
                 $ticket->save();
-        
+
             }
 
             return response()->json(['code' => 202, 'message' => 'Ticket booking in progress']);
@@ -162,7 +164,7 @@ class BusinessController extends Controller
         return response()->json(['code' => 400, 'message' => 'Insufficient balance']);
     }
 
-    
+
     public function checkBalance(Request $request)
 {
     $user = auth()->user();
@@ -220,11 +222,11 @@ class BusinessController extends Controller
                     ->orderByDesc('created_at')
                     ->get(['created_at as date_time', 'amount as amount', 'status', 'id', DB::raw("'recharge' as transaction_type")]);
 
-        $transactions = $withdrawals->merge($recharges);
+        // $transactions = $withdrawals->merge($recharges);
 
-        $transactions = $transactions->sortByDesc('date_time');
+        // $transactions = $transactions->sortByDesc('date_time');
 
-        return response()->json($transactions);
+        return response()->json($recharges);
     }
 
     public function getBalance(){

@@ -1,8 +1,12 @@
 <?php
 
+use App\Models\Add;
 use App\Models\News;
 use App\Models\Movie;
+use App\Models\Service;
 use App\Models\Recharge;
+use App\Models\Withdrawal;
+use App\Models\Advertisement;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\ProfileController;
@@ -34,17 +38,23 @@ Route::get('/news', function () {
 });
 
 Route::get('/recharge', function () {
-    $recharge =  Recharge::all();
-    return view('recharge', compact('recharge'));
+    $recharges =  Recharge::all();
+    return view('recharge', compact('recharges'));
 });
 
+Route::get('/withdrawal', function () {
+    $withdrawal =  Withdrawal::all();
+    return view('withdrawal', compact('withdrawal'));
+});
 
 Route::get('/services', function () {
-    return view('services');
+    $services = Service::all();
+    return view('services', compact('services'));
 });
 
-Route::get('/add', function () {
-    return view('add');
+Route::get('/ads', function () {
+    $ads = Advertisement::all();
+    return view('add', compact('ads'));
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -94,10 +104,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/user/recharge', [BusinessController::class, 'recharge']);
     Route::post('/user/withdrawal', [BusinessController::class, 'withdrawal']);
 
-    Route::post('/admin/recharge/approve/{id}', [AdminController::class, 'approveRecharge']);
-    Route::post('/admin/recharge/decline/{id}', [AdminController::class, 'declineRecharge']);
-    Route::post('/admin/withdrawal/approve/{id}', [AdminController::class, 'approveWithdrawal']);
-    Route::post('/admin/withdrawal/decline/{id}', [AdminController::class, 'declineWithdrawal']);
+    Route::post('/admin/recharge/approve/{id}', [AdminController::class, 'approveRecharge'])->name('admin.recharge.approve');
+    Route::post('/admin/recharge/decline/{id}', [AdminController::class, 'declineRecharge'])->name('admin.recharge.decline');
+    Route::post('/admin/withdrawal/approve/{id}', [AdminController::class, 'approveWithdrawal'])->name('admin.withdrawal.approve');
+    Route::post('/admin/withdrawal/decline/{id}', [AdminController::class, 'declineWithdrawal'])->name('admin.withdrawal.decline');
 
     Route::get('/user/notification/index', [ProfileController::class, 'indexNotification']);
     Route::post('/user/wallet/add', [BusinessController::class, 'addWallet']);

@@ -104,11 +104,12 @@ checkbox.click(function(){
 			<div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<h6 class="collapse-header">Other Pages:</h6>
-					<a class="collapse-item" href="{{ url('movies') }}">Movies</a>
+                    <a class="collapse-item" href="{{ url('movies') }}">Movies</a>
 					<a class="collapse-item" href="{{ url('news') }}">News</a>
-					<a class="collapse-item" href="{{ url('recharge-withdrawal') }}">Recharge/Withdawal</a>
+					<a class="collapse-item" href="{{ url('recharge') }}">Recharge</a>
+                    <a class="collapse-item" href="{{ url('withdrawal') }}">Withdrawal</a>
 					<a class="collapse-item" href="{{ url('services') }}">Services Number</a>
-					<a class="collapse-item" href="{{ url('add') }}">Add</a>
+					<a class="collapse-item" href="{{ url('ads') }}">Add</a>
 				</div>
 			</div>
 		</li>
@@ -261,7 +262,7 @@ checkbox.click(function(){
 				</div>
 				<div class="col-sm-6">
 					<a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Movie</span></a>
-					<a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>
+					{{-- <a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a> --}}
 				</div>
 			</div>
 		</div>
@@ -276,7 +277,7 @@ checkbox.click(function(){
 							<label for="selectAll"></label>
 						</span>
 					</th>
-					<th>Poster Image</th>
+					<th>Poster Image URLs</th>
 					<th>Release Time</th>
 					<th>Price</th>
 					<th>Title</th>
@@ -284,14 +285,14 @@ checkbox.click(function(){
 					<th>Sheets per Ticket</th>
 					<th>Income</th>
 					<th>Duration</th>
-					<th>Images</th>
+					<th>Actors Images URLs</th>
 					<th>Movie Descriptions</th>
 					<th>Instructions</th>
 					<th>Catalogue</th>
-					<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
+                @foreach ($movies as $movie)
 				<tr>
 					<td>
 						<span class="custom-checkbox">
@@ -299,73 +300,20 @@ checkbox.click(function(){
 							<label for="checkbox1"></label>
 						</span>
 					</td>
-					<td>Image</td>
-					<td>29/04/2023</td>
-					<td>2500</td>
-					<td>Avengers Infinity War</td>
-					<td>Lorem ipsum dolar smit Lorem ipsum dolar smit.</td>
-					<td>10</td>
-					<td>2300</td>
-					<td>230</td>
-					<td>Images here</td>
-					<td>Lorem ipsum dolar smit Lorem ipsum dolar smit.</td>
-					<td>Lorem ipsum dolar smit Lorem ipsum dolar smit.</td>
-					<td>Not available.</td>
-					<td>
-						<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-						<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<span class="custom-checkbox">
-							<input type="checkbox" id="checkbox1" name="options[]" value="1">
-							<label for="checkbox1"></label>
-						</span>
-					</td>
-					<td>Image</td>
-					<td>29/04/2023</td>
-					<td>2500</td>
-					<td>Avengers EndGame</td>
-					<td>Lorem ipsum dolar smit Lorem ipsum dolar smit.</td>
-					<td>10</td>
-					<td>2300</td>
-					<td>230</td>
-					<td>Images here</td>
-					<td>Lorem ipsum dolar smit Lorem ipsum dolar smit.</td>
-					<td>Lorem ipsum dolar smit Lorem ipsum dolar smit.</td>
-					<td>Not available.</td>
-					<td>
-						<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-						<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<span class="custom-checkbox">
-							<input type="checkbox" id="checkbox1" name="options[]" value="1">
-							<label for="checkbox1"></label>
-						</span>
-					</td>
-					<td>Image</td>
-					<td>29/04/2023</td>
-					<td>2500</td>
-					<td>Avengers EndGame</td>
-					<td>Lorem ipsum dolar smit Lorem ipsum dolar smit.</td>
-					<td>10</td>
-					<td>2300</td>
-					<td>230</td>
-					<td>Images here</td>
-					<td>Lorem ipsum dolar smit Lorem ipsum dolar smit.</td>
-					<td>Lorem ipsum dolar smit Lorem ipsum dolar smit.</td>
-					<td>Not available.</td>
-					<td>
-						<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-						<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-					</td>
-				</tr>
-
+                        <td>{{ $movie->poster }}</td>
+                        <td>{{ $movie->release_time }}</td>
+                        <td>{{ $movie->price }}</td>
+                        <td>{{ $movie->title }}</td>
+                        <td>{{ $movie->introduction }}</td>
+                        <td>{{ $movie->sheets_per_ticket }}</td>
+                        <td>{{ $movie->income }}</td>
+                        <td>{{ $movie->duration }}</td>
+                        <td>{{ implode(', ', $movie->actor_image) }}</td>
+                        <td>{{ $movie->description }}</td>
+                        <td>{{ $movie->instructions }}</td>
+                        <td>{{ $movie->catalogue }}</td>
+                    </tr>
+                    @endforeach
 
 			</tbody>
                                 </table>
@@ -380,7 +328,8 @@ checkbox.click(function(){
 <div id="addEmployeeModal" class="modal fade">
 <div class="modal-dialog">
 	<div class="modal-content">
-		<form>
+		<form method="POST" action="{{ url('create_movie_record') }}"  id="movie-form">
+            @csrf
 			<div class="modal-header">
 				<h4 class="modal-title">Add Movie</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -389,57 +338,57 @@ checkbox.click(function(){
                <div class="row">
                 <div class="col-4">
 				<div class="form-group">
-					<label>Poster Image</label>
-					<input type="file" id="poster-image" name="posterimage" required>
+					<label>Poster Image URL</label>
+					<input type="file" id="poster-image" name="poster" required>
 				</div>
 				<div class="form-group field-padding">
 					<label>Release Time</label> </br>
-					<input type="date" id="birthday" name="birthday" required>
+                    <input type="datetime-local" id="birthday" name="release_time" required>
 				</div>
                  <div class="form-group field-padding">
 					<label>Price</label> </br>
-					<input type="text" id="movieprice" name="pricemovie" required>
+					<input type="number" id="price" name="price" required>
 				 </div>
                </div>
                <div class="col-4">
 			      <div class="form-group">
 					<label>Title</label>
-					<input type="text" class="form-control" required>
+					<input type="text" name="title" class="form-control" required>
 				  </div>
 				  <div class="form-group">
 					<label>Movie Introduction</label>
-					<textarea name="movie-introduction" class="form-control" required></textarea>
+					<input name="introduction" class="form-control" required>
 				  </div>
 				  <div class="form-group mt-4">
 					<label>Sheets Per Ticket</label>
-					<input type="number" id="sheetticket" name="ticketsheet" required>
+					<input type="number" id="sheetticket" name="sheets_per_ticket" required>
 				 </div>
 				 <div class="form-group field-padding">
 					<label>Income</label> </br>
-					<input type="text" id="income" name="totalincome" required>
+					<input type="text" id="income" name="income" required>
 				 </div>
                </div>
 			   <div class="col-4">
 			     <div class="form-group">
 					<label>Duration</label>
-					<input type="text" class="form-control" required>
+					<input type="number" name="duration" class="form-control" required>
 				 </div>
 				 <div class="custom-file field-padding">
 				  <label>Choose Images</label>
-                   <input type="file" class="custom-file-input" id="customFile" name="images[]" multiple>
+                   <input type="file" class="custom-file-input" id="customFile" name="actor_image[]" multiple>
                    <label  class="custom-file-label" placeholder="Choose Images" for="customFile" style="color:000;">Choose images</label>
                    </div>
 				  <div class="form-group field-padding">
 					<label>Movie Descriptions</label>
-					<textarea class="form-control" name"moviedescription" required></textarea>
+					<input class="form-control" name="description" required>
 				</div>
 				 <div class="form-group">
 					<label>Instructions</label>
-					<textarea class="form-control" required></textarea>
+					<input name="instructions" class="form-control" required>
 				</div>
                   <div class="form-group">
 					<label>Catalogue</label>
-					<input type="number" id="catalouge" name="moviecatalogue" required>
+					<input type="number" id="catalouge" name="catalogue" required>
 				 </div>
                </div>
 			</div>
@@ -484,7 +433,7 @@ checkbox.click(function(){
 				  </div>
 				  <div class="form-group">
 					<label>Movie Introduction</label>
-					<textarea name="movie-introduction" class="form-control" required></textarea>
+					<input name="introduction" class="form-control" required></input>
 				  </div>
 				  <div class="form-group mt-4">
 					<label>Sheets Per Ticket</label>
@@ -506,11 +455,11 @@ checkbox.click(function(){
                    </div>
 				  <div class="form-group field-padding">
 					<label>Movie Descriptions</label>
-					<textarea class="form-control" name"moviedescription" required></textarea>
+					<input class="form-control" name="moviedescription" required>
 				</div>
 				 <div class="form-group">
 					<label>Instructions</label>
-					<textarea class="form-control" required></textarea>
+					<input class="form-control" required>
 				</div>
                   <div class="form-group">
 					<label>Catalogue</label>
@@ -564,6 +513,18 @@ checkbox.click(function(){
 
 <!-- Axios Call Function-->
 <script>
+const form = document.getElementById('movie-form');
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const releaseTimeInput = document.getElementById('birthday');
+    const releaseTimeValue = releaseTimeInput.value;
+    const releaseTime = new Date(releaseTimeValue).toISOString().replace('T', ' ').replace(/\.\d{3}Z$/, '');
+
+    releaseTimeInput.value = releaseTime;
+
+    form.submit();
+});
 
 </script>
 

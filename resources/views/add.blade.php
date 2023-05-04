@@ -103,11 +103,12 @@ checkbox.click(function(){
 			<div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<h6 class="collapse-header">Other Pages:</h6>
-					<a class="collapse-item" href="{{ url('movies') }}">Movies</a>
+                    <a class="collapse-item" href="{{ url('movies') }}">Movies</a>
 					<a class="collapse-item" href="{{ url('news') }}">News</a>
-					<a class="collapse-item" href="{{ url('recharge-withdrawal') }}">Recharge/Withdawal</a>
+					<a class="collapse-item" href="{{ url('recharge') }}">Recharge</a>
+                    <a class="collapse-item" href="{{ url('withdrawal') }}">Withdrawal</a>
 					<a class="collapse-item" href="{{ url('services') }}">Services Number</a>
-					<a class="collapse-item" href="{{ url('add') }}">Add</a>
+					<a class="collapse-item" href="{{ url('ads') }}">Add</a>
 				</div>
 			</div>
 		</li>
@@ -261,7 +262,7 @@ checkbox.click(function(){
 				</div>
 				<div class="col-sm-6">
 					<a href="#addNewsModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Ad</span></a>
-					<a href="#deleteNewsModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>
+					{{-- <a href="#deleteNewsModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a> --}}
 				</div>
 			</div>
 		</div>
@@ -281,7 +282,7 @@ checkbox.click(function(){
 				</tr>
 			</thead>
 			<tbody>
-			@foreach ($add as $add)
+			@foreach ($ads as $ads)
 				<tr>
 					<td>
 						<span class="custom-checkbox">
@@ -289,8 +290,8 @@ checkbox.click(function(){
 							<label for="checkbox1"></label>
 						</span>
 					</td>
-                        <td>{{ $add->ad_pic }}</td>
-                        <td>{{ $add->ad_link }}</td>
+                        <td><img src="{{ asset('/storage/' . basename($ads->ad_pic)) }}" alt="" width="200px" height="150px"></td>
+                        <td>{{ $ads->ad_link }}</td>
 				</tr>
 				@endforeach
 
@@ -309,8 +310,8 @@ checkbox.click(function(){
 <div id="addNewsModal" class="modal fade">
 <div class="modal-dialog">
 	<div class="modal-content">
-		<form method="POST" action="{{ url('create_add_record') }}"  id="add-form">
-		@csrf
+        <form method="POST" action="{{ url('/admin/ad/create') }}" enctype="multipart/form-data" id="add-form">
+            @csrf
 			<div class="modal-header">
 				<h4 class="modal-title">Add Ad</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>

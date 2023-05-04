@@ -94,11 +94,12 @@ checkbox.click(function(){
 			<div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<h6 class="collapse-header">Other Pages:</h6>
-					<a class="collapse-item" href="{{ url('movies') }}">Movies</a>
+                    <a class="collapse-item" href="{{ url('movies') }}">Movies</a>
 					<a class="collapse-item" href="{{ url('news') }}">News</a>
-					<a class="collapse-item" href="{{ url('recharge-withdrawal') }}">Recharge/Withdawal</a>
+					<a class="collapse-item" href="{{ url('recharge') }}">Recharge</a>
+                    <a class="collapse-item" href="{{ url('withdrawal') }}">Withdrawal</a>
 					<a class="collapse-item" href="{{ url('services') }}">Services Number</a>
-					<a class="collapse-item" href="{{ url('add') }}">Add</a>
+					<a class="collapse-item" href="{{ url('ads') }}">Add</a>
 				</div>
 			</div>
 		</li>
@@ -250,7 +251,7 @@ checkbox.click(function(){
 				</div>
 				<div class="col-sm-6">
 					<a href="#addNewsModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New News</span></a>
-					<a href="#deleteNewsModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>
+					{{-- <a href="#deleteNewsModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a> --}}
 				</div>
 			</div>
 		</div>
@@ -312,7 +313,7 @@ checkbox.click(function(){
 				</div>
 				<div class="form-group">
 					<label>Release Time</label> </br>
-					<input type="datetime-local" id="birthday" name="release_time" required>
+					<input type="date" id="birthday" name="release_time" required>
 				</div>
                 <div class="form-group">
 					<label>News Details</label>
@@ -400,18 +401,18 @@ checkbox.click(function(){
 
  <!-- Axios Call Function-->
 	<script>
-const form = document.getElementById('news-form');
-form.addEventListener('submit', (event) => {
-    event.preventDefault();
+// const form = document.getElementById('news-form');
+// form.addEventListener('submit', (event) => {
+//     event.preventDefault();
 
-    const releaseTimeInput = document.getElementById('birthday');
-    const releaseTimeValue = releaseTimeInput.value;
-    const releaseTime = new Date(releaseTimeValue).toISOString().replace('T', ' ').replace(/\.\d{3}Z$/, '');
+//     const releaseTimeInput = document.getElementById('birthday');
+//     const releaseTimeValue = releaseTimeInput.value;
+//     const releaseTime = new Date(releaseTimeValue).toISOString().replace('T', ' ').replace(/\.\d{3}Z$/, '');
 
-    releaseTimeInput.value = releaseTime;
+//     releaseTimeInput.value = releaseTime;
 
-    form.submit();
-});
+//     form.submit();
+// });
 
 </script>
 

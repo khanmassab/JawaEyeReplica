@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('balances', function (Blueprint $table) {
-            // $table->id();
-            // $table->unsignedBigInteger('user_id');
-            // $table->decimal('balance', 8, 2)->default(0);
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->decimal('balance', 8, 2)->default(0);
         });
     }
 

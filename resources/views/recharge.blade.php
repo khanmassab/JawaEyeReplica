@@ -93,17 +93,13 @@ checkbox.click(function(){
 			</a>
 			<div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
 				<div class="bg-white py-2 collapse-inner rounded">
-					<h6 class="collapse-header">Login Screens:</h6>
-					<a class="collapse-item" href="login.html">Login</a>
-					<a class="collapse-item" href="register.html">Register</a>
-					<a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-					<div class="collapse-divider"></div>
 					<h6 class="collapse-header">Other Pages:</h6>
-					<a class="collapse-item" href="movies.html">Movies</a>
-					<a class="collapse-item" href="news.html">News</a>
-					<a class="collapse-item" href="recharge.html">Recharge/Withdawal</a>
-					<a class="collapse-item" href="services.html">Services Number</a>
-					<a class="collapse-item" href="ad.html">Add</a>
+                    <a class="collapse-item" href="{{ url('movies') }}">Movies</a>
+					<a class="collapse-item" href="{{ url('news') }}">News</a>
+					<a class="collapse-item" href="{{ url('recharge') }}">Recharge</a>
+                    <a class="collapse-item" href="{{ url('withdrawal') }}">Withdrawal</a>
+					<a class="collapse-item" href="{{ url('services') }}">Services Number</a>
+					<a class="collapse-item" href="{{ url('ads') }}">Add</a>
 				</div>
 			</div>
 		</li>
@@ -255,10 +251,7 @@ checkbox.click(function(){
 				<div class="col-sm-6">
 					<h2>Manage <b>Recharge</b></h2>
 				</div>
-				<div class="col-sm-6">
-					<a href="#addNewsModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Recharge/Withdawal</span></a>
-					<a href="#deleteNewsModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>
-				</div>
+
 			</div>
 		</div>
                         <div class="card-body">
@@ -272,14 +265,16 @@ checkbox.click(function(){
 							<label for="selectAll"></label>
 						</span>
 					</th>
-					<th>ID</th>
+					<th>User Email/ID</th>
+					<th>DataTime</th>
 					<th>Amount</th>
 					<th>Status</th>
 					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
-			@foreach ($recharge as $recharge)
+                {{-- {{ $recharges }} --}}
+			@foreach ($recharges as $recharge)
 				<tr>
 					<td>
 						<span class="custom-checkbox">
@@ -287,17 +282,32 @@ checkbox.click(function(){
 							<label for="checkbox2"></label>
 						</span>
 					</td>
-				    <td>ecomspro/yutrekjhg87</td>
-					<td>500</td>
+                    <td>{{ $recharge->user->email }}</td>
+				    <td>{{ $recharge->created_at }}</td>
+					<td>{{ $recharge->amount }}</td>
+				    <td>{{ $recharge->status }}</td>
+
 					<td>
-					   <select class="form-control form-label-dropdown" id="recharge/withdrawal-status-field" v-model="recharge/withdrawal-status-type">
-                           <option value="">Accepted</option>
-                           <option value="legal">Rejected</option>
-                        </select>
-				     </td>
-					<td>
-						<button type="submit" class="btn btn-danger">Update Status</button>
-					</td>
+                        <form id="update-status-form" method="POST">
+                            @csrf
+                            <select id="status" class="form-control" name="status">
+                                <option value="">-- Select Status --</option>
+                                <option dislabled value="" {{ $recharge->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="approved" {{ $recharge->status == 'approved' ? 'selected' : '' }}>Approved</option>
+                                <option value="declined" {{ $recharge->status == 'declined' ? 'selected' : '' }}>Declined</option>
+                            </select>
+                                <button type="submit" class="btn btn-primary" onclick="event.preventDefault();
+                                if (confirm('Are you sure you want to update the status?')) {
+                                    var form = document.getElementById('update-status-form');
+                                    if (document.getElementById('status').value === 'approved') {
+                                        form.action = '{{ route('admin.recharge.approve', ['id' => $recharge->id]) }}';
+                                    } else if (document.getElementById('status').value === 'declined') {
+                                        form.action = '{{ route('admin.recharge.decline', ['id' => $recharge->id]) }}';
+                                    }
+                                    form.submit();
+                                }">Update Status</button>
+                        </form>
+                            </td>
 				</tr>
 				@endforeach
 			</tbody>

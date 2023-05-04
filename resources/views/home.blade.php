@@ -104,11 +104,12 @@ checkbox.click(function(){
 			<div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
 				<div class="bg-white py-2 collapse-inner rounded">
 					<h6 class="collapse-header">Other Pages:</h6>
-					<a class="collapse-item" href="{{ url('movies') }}">Movies</a>
+                    <a class="collapse-item" href="{{ url('movies') }}">Movies</a>
 					<a class="collapse-item" href="{{ url('news') }}">News</a>
-					<a class="collapse-item" href="{{ url('recharge-withdrawal') }}">Recharge/Withdawal</a>
+					<a class="collapse-item" href="{{ url('recharge') }}">Recharge</a>
+                    <a class="collapse-item" href="{{ url('withdrawal') }}">Withdrawal</a>
 					<a class="collapse-item" href="{{ url('services') }}">Services Number</a>
-					<a class="collapse-item" href="{{ url('add') }}">Add</a>
+					<a class="collapse-item" href="{{ url('ads') }}">Add</a>
 				</div>
 			</div>
 		</li>
@@ -159,165 +160,24 @@ checkbox.click(function(){
 
 				<!-- Page Heading -->
 
-					<h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+					<h1 style="font-size: 100px; text-align:center" class="h3 mb-0 text-gray-800">Welcome to </br>
+                        Admin Panel</h1>
 
 				</div>
 
 				<!-- Content Row -->
 				<div class="row ml-2 mr-2 ">
 
-					<!-- Earnings (Monthly) Card Example -->
-					<div class="col-xl-3 col-md-6 mb-4">
-						<div class="card border-left-primary shadow h-100 py-2">
-							<div class="card-body">
-								<div class="row no-gutters align-items-center">
-									<div class="col mr-2">
-										<div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-											Earnings (Monthly)</div>
-										<div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
-									</div>
-									<div class="col-auto">
-										<i class="fas fa-calendar fa-2x text-gray-300"></i>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 
-					<!-- Earnings (Monthly) Card Example -->
-					<div class="col-xl-3 col-md-6 mb-4">
-						<div class="card border-left-success shadow h-100 py-2">
-							<div class="card-body">
-								<div class="row no-gutters align-items-center">
-									<div class="col mr-2">
-										<div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-											Earnings (Annual)</div>
-										<div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
-									</div>
-									<div class="col-auto">
-										<i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 
-					<!-- Earnings (Monthly) Card Example -->
-					<div class="col-xl-3 col-md-6 mb-4">
-						<div class="card border-left-info shadow h-100 py-2">
-							<div class="card-body">
-								<div class="row no-gutters align-items-center">
-									<div class="col mr-2">
-										<div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
-										</div>
-										<div class="row no-gutters align-items-center">
-											<div class="col-auto">
-												<div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-											</div>
-											<div class="col">
-												<div class="progress progress-sm mr-2">
-													<div class="progress-bar bg-info" role="progressbar"
-														style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-														aria-valuemax="100"></div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-auto">
-										<i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 
-					<!-- Pending Requests Card Example -->
-					<div class="col-xl-3 col-md-6 mb-4">
-						<div class="card border-left-warning shadow h-100 py-2">
-							<div class="card-body">
-								<div class="row no-gutters align-items-center">
-									<div class="col mr-2">
-										<div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-											Pending Requests</div>
-										<div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
-									</div>
-									<div class="col-auto">
-										<i class="fas fa-comments fa-2x text-gray-300"></i>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
 				</div>
 
 				<!-- Content Row -->
 
 
 				<div class="card-table shadow mb-4">
-              <div class="table-title">
-			<div class="row">
-				<div class="col-sm-6">
-					<h2>Manage <b>Movies</b></h2>
-				</div>
-				<div class="col-sm-6">
-					<a href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Movie</span></a>
-					<a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a>
-				</div>
-			</div>
-		</div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                   <thead>
-				<tr>
-					<th>
-						<span class="custom-checkbox">
-							<input type="checkbox" id="selectAll">
-							<label for="selectAll"></label>
-						</span>
-					</th>
-					<th>Poster Image URLs</th>
-					<th>Release Time</th>
-					<th>Price</th>
-					<th>Title</th>
-					<th>Movie Introduction</th>
-					<th>Sheets per Ticket</th>
-					<th>Income</th>
-					<th>Duration</th>
-					<th>Actors Images URLs</th>
-					<th>Movie Descriptions</th>
-					<th>Instructions</th>
-					<th>Catalogue</th>
-				</tr>
-			</thead>
-			<tbody>
-                @foreach ($movies as $movie)
-				<tr>
-					<td>
-						<span class="custom-checkbox">
-							<input type="checkbox" id="checkbox1" name="options[]" value="1">
-							<label for="checkbox1"></label>
-						</span>
-					</td>
-                        <td>{{ $movie->poster }}</td>
-                        <td>{{ $movie->release_time }}</td>
-                        <td>{{ $movie->price }}</td>
-                        <td>{{ $movie->title }}</td>
-                        <td>{{ $movie->introduction }}</td>
-                        <td>{{ $movie->sheets_per_ticket }}</td>
-                        <td>{{ $movie->income }}</td>
-                        <td>{{ $movie->duration }}</td>
-                        <td>{{ implode(', ', $movie->actor_image) }}</td>
-                        <td>{{ $movie->description }}</td>
-                        <td>{{ $movie->instructions }}</td>
-                        <td>{{ $movie->catalogue }}</td>
-                    </tr>
-                    @endforeach
 
-			</tbody>
-                                </table>
-                            </div>
-                        </div>
                     </div>
 
                 </div>
@@ -326,175 +186,16 @@ checkbox.click(function(){
 <!-- Add Modal HTML -->
 <div id="addEmployeeModal" class="modal fade">
 <div class="modal-dialog">
-	<div class="modal-content">
-		<form method="POST" action="{{ url('create_movie_record') }}"  id="movie-form">
-            @csrf
-			<div class="modal-header">
-				<h4 class="modal-title">Add Movie</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			</div>
-			<div class="modal-body">
-               <div class="row">
-                <div class="col-4">
-				<div class="form-group">
-					<label>Poster Image URL</label>
-					<input type="file" id="poster-image" name="poster" required>
-				</div>
-				<div class="form-group field-padding">
-					<label>Release Time</label> </br>
-                    <input type="datetime-local" id="birthday" name="release_time" required>
-				</div>
-                 <div class="form-group field-padding">
-					<label>Price</label> </br>
-					<input type="number" id="price" name="price" required>
-				 </div>
-               </div>
-               <div class="col-4">
-			      <div class="form-group">
-					<label>Title</label>
-					<input type="text" name="title" class="form-control" required>
-				  </div>
-				  <div class="form-group">
-					<label>Movie Introduction</label>
-					<input name="introduction" class="form-control" required>
-				  </div>
-				  <div class="form-group mt-4">
-					<label>Sheets Per Ticket</label>
-					<input type="number" id="sheetticket" name="sheets_per_ticket" required>
-				 </div>
-				 <div class="form-group field-padding">
-					<label>Income</label> </br>
-					<input type="text" id="income" name="income" required>
-				 </div>
-               </div>
-			   <div class="col-4">
-			     <div class="form-group">
-					<label>Duration</label>
-					<input type="number" name="duration" class="form-control" required>
-				 </div>
-				 <div class="custom-file field-padding">
-				  <label>Choose Images</label>
-                   <input type="file" class="custom-file-input" id="customFile" name="actor_image[]" multiple>
-                   <label  class="custom-file-label" placeholder="Choose Images" for="customFile" style="color:000;">Choose images</label>
-                   </div>
-				  <div class="form-group field-padding">
-					<label>Movie Descriptions</label>
-					<input class="form-control" name="description" required>
-				</div>
-				 <div class="form-group">
-					<label>Instructions</label>
-					<input name="instructions" class="form-control" required>
-				</div>
-                  <div class="form-group">
-					<label>Catalogue</label>
-					<input type="number" id="catalouge" name="catalogue" required>
-				 </div>
-               </div>
-			</div>
 
-			<div class="modal-footer">
-				<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-				<input type="submit" class="btn btn-success" value="Add">
-			</div>
-		</form>
-	</div>
 </div>
 </div>
 <!-- Edit Modal HTML -->
 <div id="editEmployeeModal" class="modal fade">
-<div class="modal-dialog">
-	<div class="modal-content">
-		<form>
-			<div class="modal-header">
-				<h4 class="modal-title">Edit Movie</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			</div>
-			<div class="modal-body">
-               <div class="row">
-                <div class="col-4">
-				<div class="form-group">
-					<label>Poster Image</label>
-					<input type="file" id="poster-image name="posterimage" required>
-				</div>
-				<div class="form-group field-padding">
-					<label>Release Time</label> </br>
-					<input type="date" id="birthday" name="birthday" required>
-				</div>
-                 <div class="form-group field-padding">
-					<label>Price</label> </br>
-					<input type="text" id="movieprice" name="pricemovie" required>
-				 </div>
-               </div>
-               <div class="col-4">
-			      <div class="form-group">
-					<label>Title</label>
-					<input type="text" class="form-control" required>
-				  </div>
-				  <div class="form-group">
-					<label>Movie Introduction</label>
-					<input name="introduction" class="form-control" required></input>
-				  </div>
-				  <div class="form-group mt-4">
-					<label>Sheets Per Ticket</label>
-					<input type="number" id="sheetticket" name="ticketsheet" required>
-				 </div>
-				 <div class="form-group field-padding">
-					<label>Income</label> </br>
-					<input type="text" id="income" name="totalincome" required>
-				 </div>
-               </div>
-			   <div class="col-4">
-			     <div class="form-group">
-					<label>Duration</label>
-					<input type="text" class="form-control" required>
-				 </div>
-				 <div class="custom-file field-padding">
-                   <input type="file" class="custom-file-input" id="customFile" name="images[]" multiple>
-                   <label  class="custom-file-label" placeholder="Choose Images" for="customFile" style="color:000;">Choose images</label>
-                   </div>
-				  <div class="form-group field-padding">
-					<label>Movie Descriptions</label>
-					<input class="form-control" name="moviedescription" required>
-				</div>
-				 <div class="form-group">
-					<label>Instructions</label>
-					<input class="form-control" required>
-				</div>
-                  <div class="form-group">
-					<label>Catalogue</label>
-					<input type="number" id="catalouge" name="moviecatalogue" required>
-				 </div>
-               </div>
-			</div>
-
-			<div class="modal-footer">
-				<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-				<input type="submit" class="btn btn-success" value="Add">
-			</div>
-		</form>
-	</div>
-</div>
+<
 </div>
 <!-- Delete Modal HTML -->
 <div id="deleteEmployeeModal" class="modal fade">
-<div class="modal-dialog">
-	<div class="modal-content">
-		<form>
-			<div class="modal-header">
-				<h4 class="modal-title">Delete Movie</h4>
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-			</div>
-			<div class="modal-body">
-				<p>Are you sure you want to delete these Records?</p>
-				<p class="text-warning"><small>This action cannot be undone.</small></p>
-			</div>
-			<div class="modal-footer">
-				<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-				<input type="submit" class="btn btn-danger" value="Delete">
-			</div>
-		</form>
-	</div>
-</div>
+
 </div>
 </div>
 

@@ -16,7 +16,7 @@ input.btn.btn-default {
     background: #FE724C;
     color: #fff;
 }
-.table-title {        
+.table-title {
 padding-bottom: 15px;
 background: #435d7d;
 color: #fff;
@@ -60,7 +60,7 @@ table.table tr th:first-child {
 width: 60px;
 }
 table.table tr th:last-child {
-width: 100px;
+width: 150px;
 }
 table.table-striped tbody tr:nth-of-type(odd) {
 background-color: #fcfcfc;
@@ -72,7 +72,7 @@ table.table th i {
 font-size: 13px;
 margin: 0 5px;
 cursor: pointer;
-}	
+}
 table.table td:last-child i {
 opacity: 0.9;
 font-size: 22px;
@@ -120,11 +120,11 @@ padding: 0 6px;
 }
 .pagination li a:hover {
 color: #666;
-}	
+}
 .pagination li.active a, .pagination li.active a.page-link {
 background: #03A9F4;
 }
-.pagination li.active a:hover {        
+.pagination li.active a:hover {
 background: #0397d6;
 }
 .pagination li.disabled i {
@@ -144,12 +144,12 @@ padding-top: 6px
 float: left;
 margin-top: 10px;
 font-size: 13px;
-}    
+}
 /* Custom checkbox */
 .custom-checkbox {
 position: relative;
 }
-.custom-checkbox input[type="checkbox"] {    
+.custom-checkbox input[type="checkbox"] {
 opacity: 0;
 position: absolute;
 margin: 5px 0 0 3px;
@@ -243,8 +243,8 @@ resize: vertical;
 .modal .btn {
 border-radius: 2px;
 min-width: 100px;
-}	
+}
 .modal form label {
 font-weight: normal;
 color: #fff;
-}	
+}
