@@ -9,6 +9,7 @@ class Recharge extends Model
 {
     use HasFactory;
 
+    protected $table = 'recharges';
 
     protected $fillable = [
         'user_id',
@@ -49,5 +50,5 @@ class Recharge extends Model
         $this->save();
     }
 
-    
+
 }

@@ -9,21 +9,28 @@ class Withdrawal extends Model
 {
     use HasFactory;
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function approve()
     {
-        $this->status = 'apporoved';
+        $this->status = 'approved';
         $this->save();
+
 
         $balance = $this->user->balance()->first();
         if ($balance) {
-            $balance->balance -= $this->amout;
+            $balance->balance -= $this->withdrawal_amout;
             $balance->save();
         } else {
             $balance = new Balance;
             $balance->user_id = $this->user_id;
-            $balance->balance = $this->amout;
+            $balance->balance = $this->withdrawal_amout;
             $balance->save();
         }
+
     }
 
     public function decline()

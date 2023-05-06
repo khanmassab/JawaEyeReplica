@@ -22,8 +22,8 @@ class AdminController extends Controller
             'poster' => 'required|string',
             'title' => 'required|string',
             'duration' => 'required|integer',
-            'release_time' => 'required|date_format:Y-m-d H:i:s',
-            'introduction' => 'required|string',
+            // 'release_time' => 'required|date_format:Y-m-d H:i:s',
+            'introduction' => 'required',
             'actor_image' => 'required|array',
             'actor_image.*' => 'string',
             'description' => 'nullable|string',
@@ -40,11 +40,10 @@ class AdminController extends Controller
                 'error' => $validator->errors()->first(),
             ]);
         }
-
-        // dd($validatedData);
         $validatedData = $validator->validated();
 
         $validatedData['actor_image'] = json_encode($validatedData['actor_image']);
+        $validatedData['release_time'] = date('Y-m-d H:i:s', strtotime($request->input('release_time')));
         $movie = Movie::create($validatedData);
 
         if(!$movie){
@@ -53,6 +52,8 @@ class AdminController extends Controller
                 'message' => 'Movie could not be added.',
             ]);
         }
+
+        return redirect()->back();
         return response()->json([
             'code' => 200,
             'message' => 'Movie created successfully.',
@@ -79,7 +80,9 @@ class AdminController extends Controller
         $validatedData = $validator->validated();
 
         $news = News::create($validatedData);
-        return response()->json($news, 201);
+
+        return back();
+        // return response()->json($news, 201);
     }
 
     public function updateNews(Request $request, $id)
@@ -125,20 +128,23 @@ class AdminController extends Controller
         $advertisement->ad_pic = $adPic;
         $advertisement->ad_link = $validatedData['ad_link'];
         $advertisement->save();
-        
-        return response()->json(['code' => 200, 'message' => 'Advertisement created successfully', 'ad' => $advertisement ]);
+
+        return back();
+
+
+        // return response()->json(['code' => 200, 'message' => 'Advertisement created successfully', 'ad' => $advertisement ]);
     }
 
     public function deleteAd($id)
     {
         $advertisement = Advertisement::find($id);
-        
+
         if (!$advertisement) {
             return response()->json(['code' => 404, 'message' => 'Advertisement not found']);
         }
-        
+
         $advertisement->delete();
-        
+
         return response()->json(['code' => 200, 'message' => 'Advertisement deleted successfully']);
     }
 
@@ -153,21 +159,25 @@ class AdminController extends Controller
         $service->title = $validatedData['title'];
         $service->contact = $validatedData['contact'];
         $service->save();
-        
-        return response()->json(['code' => 200, 'message' => 'Service created successfully', 'service' => $service ]);
+
+        return back();
+
+
+        // return response()->json(['code' => 200, 'message' => 'Service created successfully', 'service' => $service ]);
     }
 
     public function deleteService($id)
     {
         $service = Service::find($id);
-        
+
         if (!$service) {
             return response()->json(['code' => 404, 'message' => 'service not found']);
         }
-        
+
         $service->delete();
-        
-        return response()->json(['code' => 200, 'message' => 'service deleted successfully']);
+
+        return back();
+        // return response()->json(['code' => 200, 'message' => 'service deleted successfully']);
     }
 
     public function postNotification(Request $request)
@@ -179,7 +189,7 @@ class AdminController extends Controller
         $notification = new Notification();
         $notification->notification_text = $validatedData['notification_text'];
         $notification->save();
-        
+
         return response()->json(['code' => 200, 'message' => 'Notification created successfully', 'notification' => $notification ]);
     }
 
@@ -188,7 +198,8 @@ class AdminController extends Controller
         $recharge = Recharge::findOrFail($id);
         $recharge->approve();
 
-        return response()->json(['code' => 200, 'message' => 'Recharge request approved. Balance updated.']);
+        return back();
+        // return response()->json(['code' => 200, 'message' => 'Recharge request approved. Balance updated.']);
     }
 
     public function declineRecharge($id)
@@ -196,15 +207,20 @@ class AdminController extends Controller
         $recharge = Recharge::findOrFail($id);
         $recharge->decline();
 
-        return response()->json(['code' => 200, 'message' => 'Recharge request declined.']);
+        return back();
+        // return response()->json(['code' => 200, 'message' => 'Recharge request declined.']);
     }
-    
+
     public function approveWithdrawal($id)
     {
+
         $withdrawal = Withdrawal::findOrFail($id);
         $withdrawal->approve();
 
-        return response()->json(['code' => 200, 'message' => 'Withdrawal request approved. Balance updated.']);
+        return back();
+
+
+        // return response()->json(['code' => 200, 'message' => 'Withdrawal request approved. Balance updated.']);
     }
 
     public function declineWithdrawal($id)
@@ -212,6 +228,9 @@ class AdminController extends Controller
         $withdrawal = Withdrawal::findOrFail($id);
         $withdrawal->decline();
 
-        return response()->json(['code' => 200, 'message' => 'Withdrawal request declined.']);
+        return back();
+
+
+        // return response()->json(['code' => 200, 'message' => 'Withdrawal request declined.']);
     }
 }
