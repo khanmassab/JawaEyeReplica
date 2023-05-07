@@ -135,33 +135,17 @@ class AuthController extends Controller
                 'message' => $validator->errors()->first(),
             ]);
         }
-
-        $client = new Client(
-    env('TWILIO_ACCOUNT_SID'),
-    env('TWILIO_AUTH_TOKEN')
-);
-
         $otp = rand(1000, 9999);
 
         if($request->input('email')){
             $user = User::where('email', $request->input('email'))->first();
-            
+            if(!$user){
+                $user = new User;
+            }
         }
 
-        else{
-            $user = User::where('phone', $request->input('phone'))->first();
-            $toNumber = $request->input('phone');
-            $message = 'Your verification code is: 1234';
 
-            $client->messages->create($toNumber, [
-                'from' => env('TWILIO_NUMBER'),
-                'body' => $message
-            ]);
-        }
 
-        if(!$user){
-            $user = new User;
-        }
 
         if($request->email){
             $user->email = $request->email;
@@ -335,9 +319,6 @@ class AuthController extends Controller
         $user->otp = $otp;
         $user->save();
         return response()->json(['code' => 200, 'otp' => $otp]);
-        // if($mail){
-        // }
-
 
     }
 
@@ -365,8 +346,6 @@ class AuthController extends Controller
         else{
             $user = User::where('phone', $request->input('phone'))->first();
         }
-
-        // dd($user);
 
         if(!$user){
             return response()->json(['code' => 404, 'success' => false, 'message' => 'User not found']);

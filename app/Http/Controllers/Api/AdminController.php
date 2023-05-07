@@ -78,7 +78,7 @@ class AdminController extends Controller
 
         // dd($validatedData);
         $validatedData = $validator->validated();
-
+ 
         $news = News::create($validatedData);
 
         return back();
