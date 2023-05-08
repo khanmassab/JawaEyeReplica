@@ -100,6 +100,7 @@ checkbox.click(function(){
                     <a class="collapse-item" href="{{ url('withdrawal') }}">Withdrawal</a>
 					<a class="collapse-item" href="{{ url('services') }}">Services Number</a>
 					<a class="collapse-item" href="{{ url('ads') }}">Add</a>
+					<a class="collapse-item" href="{{ url('notification') }}">Notifications</a>
 				</div>
 			</div>
 		</li>
