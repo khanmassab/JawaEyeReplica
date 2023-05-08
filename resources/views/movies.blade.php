@@ -339,7 +339,7 @@ checkbox.click(function(){
                 <div class="col-4">
 				<div class="form-group">
 					<label>Poster Image URL</label>
-					<input type="file" id="poster-image" name="poster" required>
+					<input type="text" id="poster-image" name="poster" required>
 				</div>
 				<div class="form-group field-padding">
 					<label>Release Time</label> </br>

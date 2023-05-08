@@ -13,4 +13,9 @@ class Advertisement extends Model
         'ad_link',
         'ad_pic',
     ];
+
+    public function getAdPicUrlAttribute()
+    {
+        return asset('storage/' . basename($this->attributes['ad_pic']));
+    }
 }

@@ -266,6 +266,7 @@ checkbox.click(function(){
 						</span>
 					</th>
 					<th>User Email/ID</th>
+					<th>Wallted Address</th>
 					<th>DataTime</th>
 					<th>Amount</th>
 					<th>Status</th>
@@ -283,23 +284,32 @@ checkbox.click(function(){
 						</span>
 					</td>
                     <td>{{ $withdrawal->user->email }}</td>
+                    <td>{{ $withdrawal->user->wallet_address }}</td>
 				    <td>{{ $withdrawal->created_at }}</td>
 					<td>{{ $withdrawal->withdrawal_amout }}</td>
 				    <td>{{ $withdrawal->status }}</td>
 
 					<td>
-                        <form id="update-status-form" method="POST">
-                            @csrf
-                            <select id="status" class="form-control" name="status">
-                                <option value="">-- Select Status --</option>
-                                <option disabled value="" {{ $withdrawal->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="approved" {{ $withdrawal->status == 'approved' ? 'selected' : '' }}>Approved</option>
-                                <option value="declined" {{ $withdrawal->status == 'declined' ? 'selected' : '' }}>Declined</option>
-                            </select>
-                            <button type="submit" class="btn btn-primary" onclick="updateStatus(event)">
-                                Update Status
-                            </button>
-                        </form>
+					<form id="update-status-form" action="{{ url('admin/withdrawal/approve', $withdrawal->id) }}" method="POST">
+							@csrf
+							<select id="status" class="form-control" name="status">
+								<option value="">-- Select Status --</option>
+								<option dislabled value="" {{ $withdrawal->status == 'pending' ? 'selected' : '' }}>Pending</option>
+								<option value="approved" {{ $withdrawal->status == 'approved' ? 'selected' : '' }}>Approved</option>
+								<!-- <option value="declined" {{ $withdrawal->status == 'declined' ? 'selected' : '' }}>Declined</option> -->
+							</select>
+								<button type="submit" class="btn btn-primary" onclick="event.preventDefault();
+								if (confirm('Are you sure you want to update the status?')) {
+									var form = document.getElementById('update-status-form');
+									if (document.getElementById('status').value === 'approved') {
+										form.action = '{{ route('admin.withdrawal.approve', ['id' => $withdrawal->id]) }}';
+									} 
+									// else if (document.getElementById('status').value === 'declined') {
+									// 	form.action = '{{ route('admin.withdrawal.decline', ['id' => $withdrawal->id]) }}';
+									// }
+									form.submit();
+								}">Update Status</button>
+						</form>
                     </td>
 				</tr>
 				@endforeach
@@ -424,19 +434,6 @@ checkbox.click(function(){
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
 <script>
-function updateStatus(event) {
-    event.preventDefault();
-    if (confirm('Are you sure you want to update the status?')) {
-        var form = document.getElementById('update-status-form');
-        var status = document.getElementById('status').value;
-        if (status === 'approved') {
-            form.action = '{{ route('admin.withdrawal.approve', ['id' => $withdrawal->id]) }}';
-        } else if (status === 'declined') {
-            form.action = '{{ route('admin.withdrawal.decline', ['id' => $withdrawal->id]) }}';
-        }
-        form.submit();
-    }
-}
 </script>
 
 

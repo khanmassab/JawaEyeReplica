@@ -190,7 +190,11 @@ class AdminController extends Controller
         $notification->notification_text = $validatedData['notification_text'];
         $notification->save();
 
-        return response()->json(['code' => 200, 'message' => 'Notification created successfully', 'notification' => $notification ]);
+        // dd($notification);
+
+        return back();
+
+        // return response()->json(['code' => 200, 'message' => 'Notification created successfully', 'notification' => $notification ]);
     }
 
     public function approveRecharge($id)

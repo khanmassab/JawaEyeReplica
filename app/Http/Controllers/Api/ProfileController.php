@@ -69,8 +69,16 @@ class ProfileController extends Controller
     public function indexAd()
     {
         $advertisements = Advertisement::all();
+
+        // Map the $advertisements collection to a new collection, adding the ad_pic_url attribute
+        $advertisementsWithUrls = $advertisements->map(function ($advertisement) {
+            $advertisement['ad_pic_url'] = $advertisement->ad_pic_url;
+            return $advertisement;
+        });
         
-        return response()->json( $advertisements);
+        // Return the new collection as JSON
+        return response()->json($advertisementsWithUrls);
+        
     }
     
     public function indexService()

@@ -6,7 +6,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>SNBRZ - Recharge</title>
+<title>SNBRZ - Notification </title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -14,6 +14,15 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<style>
+body {
+color: #566787;
+background: #f5f5f5;
+font-family: 'Varela Round', sans-serif;
+font-size: 13px;
+}
+
+</style>
 <script>
 $(document).ready(function(){
 // Activate tooltip
@@ -47,7 +56,6 @@ checkbox.click(function(){
 <!-- Custom styles for this template-->
 <link href="sb-admin-2.min.css" rel="stylesheet">
 <link href="style_two.css" rel="stylesheet">
-</head>
 </head>
 <body id="page-top">
 
@@ -244,14 +252,16 @@ checkbox.click(function(){
 
 				<!-- Content Row -->
 
-
-						 <div class="card-table shadow mb-4">
+			<div class="card-table shadow mb-4">
               <div class="table-title">
 			<div class="row">
 				<div class="col-sm-6">
-					<h2>Manage <b>Recharge</b></h2>
+					<h2>Manage <b>Notification</b></h2>
 				</div>
-
+				<div class="col-sm-6">
+					<a href="#addNewsModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Add New Services Number</span></a>
+					{{-- <a href="#deleteNewsModal" class="btn btn-danger" data-toggle="modal"><i class="material-icons">&#xE15C;</i> <span>Delete</span></a> --}}
+				</div>
 			</div>
 		</div>
                         <div class="card-body">
@@ -265,52 +275,19 @@ checkbox.click(function(){
 							<label for="selectAll"></label>
 						</span>
 					</th>
-					<th>User Email/ID</th>
-					<th>Proof Screenshot</th>
-					<th>DataTime</th>
-					<th>Amount</th>
-					<th>Status</th>
-					<th>Action</th>
+					<th>Notification Text</th>
 				</tr>
 			</thead>
 			<tbody>
-                {{-- {{ $recharges }} --}}
-			@foreach ($recharges as $recharge)
+              @foreach ($notifications as $notification)
 				<tr>
 					<td>
 						<span class="custom-checkbox">
-							<input type="checkbox" id="checkbox2" name="options[]" value="1">
-							<label for="checkbox2"></label>
+							<input type="checkbox" id="checkbox1" name="options[]" value="1">
+							<label for="checkbox1"></label>
 						</span>
 					</td>
-                    <td>{{ $recharge->user->email }}</td>
-                    <td><img src="{{ asset('/storage/public/' . basename($recharge->proof_screenshot)) }}" alt="" width="200px" height="150px"></td>
-				    <td>{{ $recharge->created_at }}</td>
-					<td>{{ $recharge->amount }}</td>
-				    <td>{{ $recharge->status }}</td>
-
-					<td>
-						<form id="update-status-form" action="{{ url('admin/recharge/approve', $recharge->id) }}" method="POST">
-							@csrf
-                            <select id="status" class="form-control" name="status">
-                                <option value="">-- Select Status --</option>
-                                <option dislabled value="" {{ $recharge->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="approved" {{ $recharge->status == 'approved' ? 'selected' : '' }}>Approved</option>
-                                <!-- <option value="declined" {{ $recharge->status == 'declined' ? 'selected' : '' }}>Declined</option> -->
-                            </select>
-                                <button type="submit" class="btn btn-primary" onclick="event.preventDefault();
-                                if (confirm('Are you sure you want to update the status?')) {
-                                    var form = document.getElementById('update-status-form');
-                                    if (document.getElementById('status').value === 'approved') {
-                                        form.action = '{{ route('admin.recharge.approve', ['id' => $recharge->id]) }}';
-                                    } 
-									// else if (document.getElementById('status').value === 'declined') {
-                                    //     form.action = '{{ route('admin.recharge.decline', ['id' => $recharge->id]) }}';
-                                    // }
-                                    form.submit();
-                                }">Update Status</button>
-                        </form>
-                            </td>
+                        <td>{{ $notification->notification_text }}</td>
 				</tr>
 				@endforeach
 			</tbody>
@@ -325,28 +302,18 @@ checkbox.click(function(){
 <div id="addNewsModal" class="modal fade">
 <div class="modal-dialog">
 	<div class="modal-content">
-		<form method="POST" action="{{ url('create_add_record') }}"  id="recharge-form">
+		<form method="POST" action="{{ url('/admin/notification/create') }}"  id="services-form">
 		@csrf
 			<div class="modal-header">
-				<h4 class="modal-title">Add Recharge</h4>
+				<h4 class="modal-title">Add Notification </h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
                <div class="row">
                 <div class="col-12">
 				<div class="form-group">
-					<label>ID </label> </br>
-					<input type="text" id="user-id" name="userid" required>
-				</div>
-                <div class="form-group mt-4">
-					<label>Total Amount</label>
-					<input type="number" id="recharge/withdrawal-amount" name="recharge/withdrawalamount" required>
-				</div>
-                <div class="dropdown">
-					<select class="form-control form-label-dropdown" id="recharge/withdrawal-status-field" v-model="recharge/withdrawal-status-type">
-                           <option value="">Accepted</option>
-                           <option value="legal">Rejected</option>
-                        </select>
+					<label>Notification Text</label> </br>
+					<input type="text" id="service-title" name="notification_text" required
 				</div>
                </div>
 			</div>
@@ -365,30 +332,20 @@ checkbox.click(function(){
 	<div class="modal-content">
 		<form>
 			<div class="modal-header">
-				<h4 class="modal-title">Add Recharge</h4>
+				<h4 class="modal-title">Edit Service Number</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
-               <div class="row">
+                <div class="row">
                 <div class="col-12">
 				<div class="form-group">
-					<label>ID </label> </br>
-					<input type="text" id="user-id" name="userid" required>
-				</div>
-                <div class="form-group mt-4">
-					<label>Total Amount</label>
-					<input type="number" id="recharge/withdrawal-amount" name="recharge/withdrawalamount" required>
-				</div>
-                <div class="dropdown">
-					<select class="form-control form-label-dropdown" id="recharge/withdrawal-status-field" v-model="recharge/withdrawal-status-type">
-                           <option value="">Accepted</option>
-                           <option value="legal">Rejected</option>
-                        </select>
+					<label>Notification Text</label> </br>
+					<input type="text" id="service-title" name="title" required
 				</div>
                </div>
 			</div>
 
-			<div class="modal-footer mt-4">
+			<div class="modal-footer">
 				<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
 				<input type="submit" class="btn btn-success" value="Add">
 			</div>
@@ -402,7 +359,7 @@ checkbox.click(function(){
 	<div class="modal-content">
 		<form>
 			<div class="modal-header">
-				<h4 class="modal-title">Delete News</h4>
+				<h4 class="modal-title">Delete Service Number</h4>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 			</div>
 			<div class="modal-body">
@@ -431,39 +388,27 @@ checkbox.click(function(){
 </div>
 
 <!-- Axios Call Function-->
-	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script>
+  function addServiceNumber() {
+  const serviceTitle = document.getElementById('service-title').value;
+  const serviceContactNumber = document.getElementById('service-contact-number').value;
 
-<script>
-  axios.get('/api/recharge-withdrawal')
-    .then(response => {
-      const data = response.data;
-      const tableBody = document.querySelector('#dataTable tbody');
-      let rows = '';
-      data.forEach(row => {
-        rows += `
-          <tr>
-            <td>
-              <span class="custom-checkbox">
-                <input type="checkbox" id="checkbox${row.id}" name="options[]" value="${row.id}">
-                <label for="checkbox${row.id}"></label>
-              </span>
-            </td>
-            <td>${row.id}</td>
-            <td>${row.type}</td>
-            <td>${row.amount}</td>
-            <td>${row.status}</td>
-            <td>
-              <a href="#editNewsModal" class="edit" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-              <a href="#deleteNewsModal" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-            </td>
-          </tr>
-        `;
-      });
-      tableBody.innerHTML = rows;
-    })
-    .catch(error => console.error(error));
+  axios.post('/api/add-service', {
+    title: serviceTitle,
+    contactNumber: serviceContactNumber
+  })
+  .then(function (response) {
+    console.log(response);
+    // Handle success
+  })
+  .catch(function (error) {
+    console.log(error);
+    // Handle error
+  });
+}
+
+
 </script>
-
 
  <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>

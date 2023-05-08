@@ -215,18 +215,18 @@ class BusinessController extends Controller
     public function accountHistory(){
 
         $withdrawals = Withdrawal::where('status', 'approved')
+            ->where('user_id', auth()->id())
             ->orderByDesc('created_at')
             ->get(['created_at as date_time', 'withdrawal_amout as amount', 'status', 'id', DB::raw("'withdrawal' as transaction_type")]);
 
         $recharges = Recharge::where('status', 'approved')
-                    ->orderByDesc('created_at')
-                    ->get(['created_at as date_time', 'amount as amount', 'status', 'id', DB::raw("'recharge' as transaction_type")]);
+            ->where('user_id', auth()->id())
+            ->orderByDesc('created_at')
+            ->get(['created_at as date_time', 'amount as amount', 'status', 'id', DB::raw("'recharge' as transaction_type")]);
 
-        // $transactions = $withdrawals->merge($recharges);
-
-        // $transactions = $transactions->sortByDesc('date_time');
-
-        return response()->json($recharges);
+        $transactions = $withdrawals->merge($recharges);
+        $transactions = $transactions->sortByDesc('date_time');
+        return response()->json($transactions);
     }
 
     public function getBalance(){

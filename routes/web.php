@@ -7,11 +7,13 @@ use App\Models\Service;
 use App\Models\Recharge;
 use App\Models\Withdrawal;
 use App\Models\Advertisement;
+use App\Models\Notification;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AdminController;
+// use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\BusinessController;
-use App\Http\Controllers\Api\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,34 +30,41 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/movies', function () {
-    $movies= Movie::all();
-    return view('movies', compact('movies'));
-});
+Route::middleware(['auth'])->group(function () {
+    Route::get('/movies', function () {
+        $movies= Movie::all();
+        return view('movies', compact('movies'));
+    });
 
-Route::get('/news', function () {
-    $news = News::all();
-    return view('news', compact('news'));
-});
+    Route::get('/news', function () {
+        $news = News::all();
+        return view('news', compact('news'));
+    });
 
-Route::get('/recharge', function () {
-    $recharges =  Recharge::all();
-    return view('recharge', compact('recharges'));
-});
+    Route::get('/notification', function () {
+        $notifications = Notification::all();
+        return view('notification', compact('notifications'));
+    });
 
-Route::get('/withdrawal', function () {
-    $withdrawal =  Withdrawal::all();
-    return view('withdrawal', compact('withdrawal'));
-});
+    Route::get('/recharge', function () {
+        $recharges = Recharge::all();
+        return view('recharge', compact('recharges'));
+    });
 
-Route::get('/services', function () {
-    $services = Service::all();
-    return view('services', compact('services'));
-});
+    Route::get('/withdrawal', function () {
+        $withdrawal = Withdrawal::all();
+        return view('withdrawal', compact('withdrawal'));
+    });
 
-Route::get('/ads', function () {
-    $ads = Advertisement::all();
-    return view('add', compact('ads'));
+    Route::get('/services', function () {
+        $services = Service::all();
+        return view('services', compact('services'));
+    });
+
+    Route::get('/ads', function () {
+        $ads = Advertisement::all();
+        return view('add', compact('ads'));
+    });
 });
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -63,19 +72,19 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Auth::routes();
 
 
-Route::prefix('auth')->group(function () {
-    Route::post('/send_signup_otp',  [AuthController::class, 'sendOtp']);
-    Route::post('/create_admin',  [AuthController::class, 'createAdmin']);
-    Route::middleware('auth:sanctum')->group(function () {
-        Route::get('/get_invitation_code', [AuthController::class, 'generateInvitationKey']);
-    });
+// Route::prefix('auth')->group(function () {
+//     Route::post('/send_signup_otp',  [AuthController::class, 'sendOtp']);
+//     Route::post('/create_admin',  [AuthController::class, 'createAdmin']);
+//     Route::middleware('auth:sanctum')->group(function () {
+//         Route::get('/get_invitation_code', [AuthController::class, 'generateInvitationKey']);
+//     });
 
-    Route::post('/admin_login', [AuthController::class, 'adminLogin']);
-    Route::post('/user_register', [AuthController::class, 'signUp']);
-    Route::post('/user_login', [AuthController::class, 'userLogin']);
-    Route::post('/password/otp', [AuthController::class, 'generateOtp']);
-    Route::post('/password/change', [AuthController::class, 'verifyOtpAndChangePassword']);
-});
+//     Route::post('/admin_login', [AuthController::class, 'adminLogin']);
+//     Route::post('/user_register', [AuthController::class, 'signUp']);
+//     Route::post('/user_login', [AuthController::class, 'userLogin']);
+//     Route::post('/password/otp', [AuthController::class, 'generateOtp']);
+//     Route::post('/password/change', [AuthController::class, 'verifyOtpAndChangePassword']);
+// });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
