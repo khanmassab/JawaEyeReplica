@@ -66,23 +66,12 @@ checkbox.click(function(){
 	<!-- Sidebar -->
 	<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
-		<!-- Sidebar - Brand -->
-		<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-			<div class="sidebar-brand-icon rotate-n-15">
-				<i class="fas fa-laugh-wink"></i>
-			</div>
-			 <div class="sidebar-brand-text mx-3">BNSRZ </div>
-		</a>
+		
 
 		<!-- Divider -->
 		<hr class="sidebar-divider my-0">
 
-		<!-- Nav Item - Dashboard -->
-		<li class="nav-item active">
-			<a class="nav-link" href="index.html">
-				<i class="fas fa-fw fa-tachometer-alt"></i>
-				<span>Dashboard</span></a>
-		</li>
+	
 
 		<!-- Divider -->
 		<hr class="sidebar-divider">
@@ -253,6 +242,7 @@ checkbox.click(function(){
 					</div>
 				</div>
 
+
 				<!-- Content Row -->
 
 			 <div class="card-table shadow mb-4">
@@ -280,6 +270,7 @@ checkbox.click(function(){
 					</th>
 					<th>Ad Image</th>
 					<th>Ad Link</th>
+					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -293,6 +284,13 @@ checkbox.click(function(){
 					</td>
                         <td><img src="{{ asset('/storage/' . basename($ads->ad_pic)) }}" alt="" width="200px" height="150px"></td>
                         <td>{{ $ads->ad_link }}</td>
+						<td>
+							<form action="{{ route('delete_ad_record', $ads->id) }}" method="POST" style="display: inline-block">
+								@csrf
+								@method('DELETE')
+								<button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
+							</form>
+						</td>
 				</tr>
 				@endforeach
 

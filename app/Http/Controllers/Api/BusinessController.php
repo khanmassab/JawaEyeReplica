@@ -23,6 +23,7 @@ class BusinessController extends Controller
         if($user->walled_address){
             return response()->json(['code' => 403, 'message' => 'You are not allowed to change the walled address']);
         }
+        
         if($user){
             $user->wallet_address = $request->input('wallet_address');
             $user->wallet_type = $request->input('wallet_type');
@@ -44,6 +45,9 @@ class BusinessController extends Controller
         //     return response()->json(['error' => $validator->errors()], 422);
         // }
 
+        if($request->amount < 50){
+            return response()->json(['code' => 403, 'message' => 'You cannot make rechage less than 50']);
+        }
         $user = auth()->user();
 
 
@@ -129,34 +133,43 @@ class BusinessController extends Controller
 
         // Check if user has sufficient balance
         if ($user->balance->balance >= $price * $quantity) {
-            // Deduct ticket price from user balance
+            
+            $lastPurchase = Ticket::where('user_id', $user->id)
+            ->where('movie_id', $movieId)
+            ->where('booked_at', '>=', now()->subHours(24))
+            ->first();
+
+            if ($lastPurchase) {
+                // User has already purchased a ticket for this movie in the last 24 hours
+                return response()->json(['code' => 400, 'message' => 'You have already purchased a ticket for a movie in the last 24 hours']);
+            }
+            // return $user->balance->balance;
             $user->balance->balance -= $price * $quantity;
             $user->balance->save();
 
             // Add 2% of ticket price to ticket quota
             $gains = $user->gain()->firstOrNew([]);
+
+            
             $gains->personal_gains += $price * $quantity * 0.02;
             $gains->ticket_quota += $price * $quantity;
-
+            
             // Save changes to user and gains
             $user->save();
             $gains->save();
+            
+            // return $gains;
 
 
-
-            // Create new ticket records
-            for ($i = 0; $i < $quantity; $i++) {
-                $ticket = new Ticket();
-                $ticket->user_id = $user->id;
-                $ticket->movie_id = $movie->id;
-                $ticket->quantity = $quantity;
-                $ticket->price = $price;
-                $ticket->status = 0;
-                $ticket->booked_at = now();
-                $ticket->expiry_at = now()->addHours(24);
-                $ticket->save();
-
-            }
+            $ticket = new Ticket();
+            $ticket->user_id = $user->id;
+            $ticket->movie_id = $movie->id;
+            $ticket->quantity = $quantity;
+            $ticket->price = $price;
+            $ticket->status = 0;
+            $ticket->booked_at = now();
+            $ticket->expiry_at = now()->addHours(24);
+            $ticket->save();
 
             return response()->json(['code' => 202, 'message' => 'Ticket booking in progress']);
         }
@@ -174,23 +187,30 @@ class BusinessController extends Controller
                      ->where('status', '!=', 1)
                      ->get();
 
+
     // Loop through all the tickets
     foreach ($tickets as $ticket) {
         // Check if the ticket has expired
         if ($ticket->expiry_at <= now()) {
+            
             $quantity = $ticket->quantity;
             $price = $ticket->price;
 
+            
             // Calculate profit from expired ticket and update user balance
-            $profit = $price + ($price * 0.2);
+            $profit = $price + ($price * 0.02);
             $user->balance->balance += $profit * $quantity;
             $user->balance->save();
 
+
             // Update user gains
             $gains = $user->gain()->firstOrNew([]);
+            
+            // $gains->ticket_quota = 100;
             $gains->ticket_quota -= $price * $quantity;
             $gains->personal_gains += $price * $quantity * 0.02;
             $gains->save();
+                        
 
             // Mark the ticket as completed
             $ticket->status = 1;
@@ -198,8 +218,11 @@ class BusinessController extends Controller
 
             // Update the referer's gains if there is one
             $code = auth()->user()->invitation_code;
-            $userReferer = DB::table('invitation_codes')->where('invitation_code', $code)->first();
+            $userReferer = DB::table('invitation_codes')->where('invitation_code', $code)->latest()->first();
             $userReferer = User::find($userReferer->user_id);
+            
+            // return $userReferer;
+
             if ($userReferer) {
                 $refererGain = $userReferer->gain()->firstOrNew([]);
                 $refererGain->team_earning += $price * $quantity * 0.0004;
@@ -208,25 +231,47 @@ class BusinessController extends Controller
         }
     }
 
-    // Return the updated user balance and gains
-    return response()->json(['code' => 200, 'balance' => $user->balance->balance, 'personal_gain' => $user->gain]);
+
+    $balance = null; 
+    if($user->balance){
+        $balance = $user->balance->balance;
+    }
+    
+    
+    $gain = null; 
+    if($user->gain){
+        $gain = $user->gain;
+    }
+
+
+    // 225|aaihAdzHSGAoFVRsMtftNT7VFZ8hkHM5sx2Wdm3d
+
+    $code = DB::table('invitation_codes')->where('user_id', auth()->id())->latest()->first()->invitation_code;
+    $total_added_people = DB::table('users')->where('invitation_code', $code)->get()->count();
+    return response()->json(['code' => 200, 'balance' => $balance, 'personal_gain' => $gain, 'total_added_people' => $total_added_people]);
 }
 
     public function accountHistory(){
 
         $withdrawals = Withdrawal::where('status', 'approved')
-            ->where('user_id', auth()->id())
-            ->orderByDesc('created_at')
-            ->get(['created_at as date_time', 'withdrawal_amout as amount', 'status', 'id', DB::raw("'withdrawal' as transaction_type")]);
-
-        $recharges = Recharge::where('status', 'approved')
-            ->where('user_id', auth()->id())
-            ->orderByDesc('created_at')
-            ->get(['created_at as date_time', 'amount as amount', 'status', 'id', DB::raw("'recharge' as transaction_type")]);
-
-        $transactions = $withdrawals->merge($recharges);
-        $transactions = $transactions->sortByDesc('date_time');
-        return response()->json($transactions);
+        ->where('user_id', auth()->id())
+        ->orderByDesc('created_at')
+        ->get(['created_at as date_time', 'withdrawal_amout as amount', 'status', 'id', DB::raw("'withdrawal' as transaction_type")]);
+    
+    $recharges = Recharge::where('status', 'approved')
+        ->where('user_id', auth()->id())
+        ->orderByDesc('created_at')
+        ->get(['created_at as date_time', 'amount as amount', 'status', 'id', DB::raw("'recharge' as transaction_type")]);
+    
+    $transactions = $withdrawals->merge($recharges)
+        ->sortByDesc('date_time')
+        ->groupBy('transaction_type')
+        ->map(function ($groupedTransactions) {
+            return $groupedTransactions->values();
+        });
+    
+    return response()->json($transactions->values()->flatten());
+    
     }
 
     public function getBalance(){

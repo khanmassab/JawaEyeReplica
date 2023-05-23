@@ -12,4 +12,9 @@ class Notification extends Model
     protected $fillable = [
         'notification_text'
     ];
+
+    public function getCreatedAtAttribute($value)
+    {
+        return date('d-m-Y H:i', strtotime($value));
+    }
 }

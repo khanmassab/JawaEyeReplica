@@ -68,23 +68,12 @@ checkbox.click(function(){
 	<ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
 		<!-- Sidebar - Brand -->
-		<a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
-			<div class="sidebar-brand-icon rotate-n-15">
-				<i class="fas fa-laugh-wink"></i>
-			</div>
-			 <div class="sidebar-brand-text mx-3">BNSRZ</div>
-		</a>
+	
 
 		<!-- Divider -->
 		<hr class="sidebar-divider my-0">
 
-		<!-- Nav Item - Dashboard -->
-		<li class="nav-item active">
-			<a class="nav-link" href="index.html">
-				<i class="fas fa-fw fa-tachometer-alt"></i>
-				<span>Dashboard</span></a>
-		</li>
-
+	
 		<!-- Divider -->
 		<hr class="sidebar-divider">
 
@@ -164,7 +153,7 @@ checkbox.click(function(){
 					<h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
 
 				</div>
-
+ 
 				<!-- Content Row -->
 				<div class="row ml-2 mr-2 ">
 
@@ -290,6 +279,7 @@ checkbox.click(function(){
 					<th>Movie Descriptions</th>
 					<th>Instructions</th>
 					<th>Catalogue</th>
+					<th>Action</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -313,6 +303,13 @@ checkbox.click(function(){
                         <td>{{ $movie->description }}</td>
                         <td>{{ $movie->instructions }}</td>
                         <td>{{ $movie->catalogue }}</td>
+						<td>
+							<form action="{{ route('delete_movie_record', $movie->id) }}" method="POST" style="display: inline-block">
+								@csrf
+								@method('DELETE')
+								<button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
+							</form>
+						</td>
                     </tr>
                     @endforeach
 

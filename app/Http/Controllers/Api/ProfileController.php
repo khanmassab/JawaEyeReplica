@@ -10,6 +10,7 @@ use App\Models\Notification;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 use App\Http\Controllers\Controller;
 
@@ -89,10 +90,16 @@ class ProfileController extends Controller
     }
     
     public function indexNotification()
-    {
-        $notifications = Notification::orderBy('created_at', 'desc')->take(10)->get();
-        
-        return response()->json( $notifications);
-    }
+{
+    $notifications = Notification::orderBy('created_at', 'desc')->take(10)->get();
+
+    // Format date and time string
+    $notifications = $notifications->map(function ($notification) {
+        $notification->created_at = Carbon::parse($notification->created_at)->format('d-m-Y H:i');
+        return $notification;
+    });
+
+    return response()->json($notifications);
+}
 
 }

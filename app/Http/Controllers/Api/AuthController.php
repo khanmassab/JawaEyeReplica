@@ -149,18 +149,43 @@ class AuthController extends Controller
 
         if($request->email){
             $user->email = $request->email;
+
+            $to = $request->email ?? $request->phone;
+            Mail::to($to)->send(new OtpMail($otp));
         }
-        if($request->phone){
-            $user->phone = $request->phone;
-        }
+
+        // if($request->phone){
+        //     $user = User::where('phone', $request->input('phone'))->first();
+        //     if(!$user){
+        //         $user = new User;
+        //     }
+        //     $user->phone = $request->phone;
+
+        //     $token = getenv("TWILIO_AUTH_TOKEN");
+        //     $twilio_sid = getenv("TWILIO_ACCOUNT_SID");
+        //     $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+
+        //     \Log::info("TWILIO_SID: {$twilio_sid}, TWILIO_AUTH_TOKEN: {$token}, TWILIO_VERIFY_SID: {$twilio_verify_sid}");
+
+        //     $twilio = new Client($twilio_sid, $token);
+
+        //     // Send OTP to the user
+        //     $verification = $twilio->verify->v2->services($twilio_verify_sid)
+        //                     ->verifications
+        //                     ->create($request->phone, "sms");
+
+        //     // Store the verification SID to retrieve the status later
+        //     $user->verification_sid = $verification->sid;
+
+
+        // }
 
         $user->otp = $otp;
         $user->save();
 
-        $to = $request->email ?? $request->phone;
-        Mail::to($to)->send(new OtpMail($otp));
-
-        return response()->json(['code' => 200, 'otp' => $otp, 'email' => $request->input('email')]);
+        $mail = $request->email ?? $request->phone;
+        
+        return response()->json(['code' => 200, 'otp' => $otp, 'mail' => $mail]);
     }
 
     public function signUp(Request $request)
@@ -182,15 +207,53 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->input('email'))->where('phone', $request->input('phone'))->first();
 
+
+        // return $user;
+
+        if($request->phone){
+
+            $token = getenv("TWILIO_AUTH_TOKEN");
+            $twilio_sid = getenv("TWILIO_ACCOUNT_SID");
+            $twilio_verify_sid = getenv("TWILIO_VERIFY_SID");
+
+            \Log::info("TWILIO_SID: {$twilio_sid}, TWILIO_AUTH_TOKEN: {$token}, TWILIO_VERIFY_SID: {$twilio_verify_sid}");
+
+            $twilio = new Client($twilio_sid, $token);
+
+            // Retrieve the OTP status for a given verification SID
+            $verification_check = $twilio->verify->v2->services($twilio_verify_sid)
+                                    ->verificationChecks
+                                    ->create(['to' => $request['phone'], 'code' => $request['otp']]);
+
+            // return $verification_check;
+            // Check the status of the verification check
+            if ($verification_check->status == "approved") {
+                $request->otp = $user->otp;
+            } else {
+                return response()->json([
+                    'code' => 404,
+                    'success' => false,
+                    'message' => 'Incorrect OTP',
+                ]);
+            }
+        }
+
         if ($user->otp != (int)$request->otp) {
             return response()->json([
                 'code' => 404,
                 'success' => false,
                 'message' => 'Incorrect OTP',
             ]);
+        }   
+
+        if($user->password){
+            return response()->json(['code' => 500, 'message' => 'User already registered']);
         }
 
-        $get_invitation = DB::table('invitation_codes')->where('invitation_code', $request->input('invitation_code'))->first();
+        $get_invitation = DB::table('invitation_codes')->where('invitation_code', $request->invitation_code)->latest()->first();
+        // $get_invitation = DB::table('users')->where('email', 'broufrahetoubou-3139@yopmail.com')->get();
+
+        // return $get_invitation;
         if(!$get_invitation){
             return response()->json([
                 'code' => 404,
@@ -206,23 +269,33 @@ class AuthController extends Controller
 
         if($user){
             $token = $user->createToken('user_token')->plainTextToken;
-            $user['token'] = $token;
             $user_id = $user->id;
-            $code = rand(100000, 999999);
+            // Generate a unique invitation code
+            $uniqueCode = false;
+            while (!$uniqueCode) {
+                $code = rand(100000, 999999);
 
-            $user->invitation_code = $code;
+                // Check if the code already exists in the database
+                $codeExists = DB::table('invitation_codes')->where('invitation_code', $code)->exists();
 
+                if (!$codeExists) {
+                    $uniqueCode = true;
+                }   
+            }
+
+            // Insert the code into the database
             $invitationKey = DB::table('invitation_codes')->insert([
                 'user_id' => $user_id,
                 'invitation_code' => $code
             ]);
+
 
             if($invitationKey){
                 return response()->json([
                     'code' => 200,
                     'success' => true,
                     'message' => 'User Created',
-                    'token' => $user['token'],
+                    'token' => $token,
                     'invitation_code' => $code
                 ]);
             }
@@ -259,15 +332,18 @@ class AuthController extends Controller
             $token = $user->createToken('user_token')->plainTextToken;
             $user['token'] = $token;
             if (Hash::check($request->password, $user->password)) {
-                $get_invitation = DB::table('invitation_codes')->where('user_id', $user->id)->first();
+                $get_invitation = DB::table('invitation_codes')->where('user_id', $user->id)->latest()->first();
+
+                // return $get_invitation;
                 if($get_invitation){
                     return response()->json([
                         'code' => 200,
                         'success' => true,
                         'message' => 'User logged in',
                         'token' => $user['token'],
-                        'invitation_code' => $user['invitation_code'],
+                        'invitation_code' => $get_invitation->invitation_code,
                         'profile_picture' => $user['profile_picture'],
+                        'wallet_address' => $user['wallet_address'],
                     ]);
                 }
             } else {

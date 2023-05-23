@@ -11,8 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('tickets', function (Blueprint $table) {
-            // $table->boolean('status')->default(0);
+        // Schema::table('users', function (Blueprint $table) {
+        //     $table->string('verification_sid')->default('');
+        // });
+        
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('verification_sid');
         });
     }
 
@@ -21,7 +25,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('tickets', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
         });
     }

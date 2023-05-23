@@ -33,7 +33,8 @@ class User extends Authenticatable
         'email',
         'password',
         'otp',
-        'profile_picture'
+        'profile_picture',
+        // 'verification_sid'
     ];
 
     /**

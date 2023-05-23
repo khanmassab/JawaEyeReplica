@@ -112,7 +112,40 @@ class AdminController extends Controller
         }
 
         $news->delete();
-        return response()->json(['message' => 'News deleted successfully'], 204);
+
+        return back();
+
+        // return response()->json(['message' => 'News deleted successfully'], 204);
+    }
+
+    public function destroyMovie($id)
+    {
+        $movie = Movie::find($id);
+
+        if (!$movie) {
+            return response()->json(['message' => 'Movie not found'], 404);
+        }
+
+        $movie->delete();
+
+        return back();
+
+        // return response()->json(['message' => 'News deleted successfully'], 204);
+    }
+
+    public function destroyNotification($id)
+    {
+        $notification = Notification::find($id);
+
+        if (!$notification) {
+            return response()->json(['message' => 'Notification not found'], 404);
+        }
+
+        $notification->delete();
+
+        return back();
+
+        // return response()->json(['message' => 'News deleted successfully'], 204);
     }
 
     public function postAdvertisement(Request $request)
@@ -145,7 +178,9 @@ class AdminController extends Controller
 
         $advertisement->delete();
 
-        return response()->json(['code' => 200, 'message' => 'Advertisement deleted successfully']);
+        return back();
+
+        // return response()->json(['code' => 200, 'message' => 'Advertisement deleted successfully']);
     }
 
     public function postService(Request $request)
